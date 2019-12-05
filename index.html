@@ -121,7 +121,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+    <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -135,12 +135,12 @@
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Startseite</a>
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archiv</a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
   </ul>
@@ -191,10 +191,10 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Erstellt: 2019-12-05 19:22:49 / Geändert am: 19:26:34" itemprop="dateCreated datePublished" datetime="2019-12-05T19:22:49+08:00">2019-12-05</time>
+              <time title="Created: 2019-12-05 19:22:49 / Modified: 19:43:09" itemprop="dateCreated datePublished" datetime="2019-12-05T19:22:49+08:00">2019-12-05</time>
             </span>
 
           
@@ -214,37 +214,76 @@
 <p>Hexo 这个博客框架没有那么重量级，它是 MarkDown 直接写文章的，然后 Hexo 可以直接将文章编译成静态网页文件并发布，所以这样文章的内容、标题、标签等信息就没必要存数据库里面了，是直接纯静态页面了，这就解决了数据库的问题。</p>
 <p>GitHub Pages 允许每个账户创建一个名为 {username}.github.io 的仓库，另外它还会自动为这个仓库分配一个 github.io 的二级域名，这就解决了域名的问题，当然如果想要自定义域名的话，也可以支持。</p>
 <p>那么如何来创建一个自己的博客站点呢<br>这里从0开始基于github和hexo博客框架建立起个人博客网站</p>
-<p>首先肯定需要有一个github的账户 如果没有就自己去建一个<a href="https://github.com" target="_blank" rel="noopener">github</a><br>hexo框架是基于nodejs的使用需要下载nodejs<a href="https://nodejs.org/dist/v12.13.1/node-v12.13.1-x64.msi" target="_blank" rel="noopener">下载</a><br>判断是否安装成功可以在cmd中输入<code>node -v</code><br>以及```<br>npm -v</p>
-<figure class="highlight plain"><figcaption><span>否则可能是安装步骤出错了</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">实际上如果安装正确应该也会有一个npm的运行程序</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">但是由于国内原因可能下载速度会比较慢</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">所以这里选择去淘宝镜像站下载一个cnpm以确保下载速度能提高点</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">在cmd命令行输入</span></pre></td></tr></table></figure>
-<p>npm install -g cnpm —registry=<a href="https://registry.npm.taobao.org" target="_blank" rel="noopener">https://registry.npm.taobao.org</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">**注意 registry前面是两个-**</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">## 在github上创建仓库</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">在整个博客搭建前需要先在GitHub上新建一个仓库，名称为 &#123;username&#125;.github.io，注意这个名比较特殊，必须要是 github.io 为后缀结尾的。</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">eg：我的github昵称是oslijw 所以这个仓库名字必须是oslijw.github.io</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">新建完成后就可以进行下一步操作</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">##安装hexo</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">上面已经安装好了nodejs和cnpm</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">下一步就可以安装hexo博客框架</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">在cmd中输入</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">&#96;&#96;&#96;cnpm install -g hexo-cli</span></pre></td></tr></table></figure>
+<p>首先肯定需要有一个github的账户 如果没有就自己去建一个<a href="https://github.com" target="_blank" rel="noopener">github</a><br>hexo框架是基于nodejs的使用需要下载nodejs<a href="https://nodejs.org/dist/v12.13.1/node-v12.13.1-x64.msi" target="_blank" rel="noopener">下载</a><br>判断是否安装成功可以在cmd中输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">node -v</span></pre></td></tr></table></figure>
+<p>以及</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npm -v</span></pre></td></tr></table></figure>
+<p>如果cmd命令行出现了版本信息那么就成功可以进行下一步 否则可能是安装步骤出错了</p>
+<p>实际上如果安装正确应该也会有一个npm的运行程序<br>但是由于国内原因可能下载速度会比较慢<br>所以这里选择去淘宝镜像站下载一个cnpm以确保下载速度能提高点<br>在cmd命令行输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">npm install -g cnpm —registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org</span></pre></td></tr></table></figure>
+<p><strong>注意 registry前面是两个-</strong></p>
+<h2 id="在github上创建仓库"><a href="#在github上创建仓库" class="headerlink" title="在github上创建仓库"></a>在github上创建仓库</h2><p>在整个博客搭建前需要先在GitHub上新建一个仓库，名称为 {username}.github.io，注意这个名比较特殊，必须要是 github.io 为后缀结尾的。</p>
+<p>eg：我的github昵称是oslijw 所以这个仓库名字必须是oslijw.github.io</p>
+<p>新建完成后就可以进行下一步操作<br>##安装hexo<br>上面已经安装好了nodejs和cnpm</p>
+<p>下一步就可以安装hexo博客框架</p>
+<p>在cmd中输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">cnpm install -g hexo-cli</span></pre></td></tr></table></figure>
 
 <p>这边实际上是安装了hexo的命令行工具</p>
 <p>安装成功后就可以开始使用好用的hexo命令<br>##初始化hexo项目<br>接下来就需要初始化一个hexo项目</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo init &#123;program-name&#125;</span></pre></td></tr></table></figure>
 
-<p>像我给我的blog项目直接命名blog所以代码是这样的：<code>hexo init blog</code></p>
-<p>windows下使用<code>dir</code>就可以列出当前目录下的文件<br>这时候会发现有一些css 之类的文件</p>
+<p>像我给我的blog项目直接命名blog所以代码是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo init blog</span></pre></td></tr></table></figure>
+
+<p>windows下使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">dir</span></pre></td></tr></table></figure>
+<p>就可以列出当前目录下的文件<br>这时候会发现有一些css 之类的文件</p>
 <p>跳到新建文件夹下使用</p>
-<figure class="highlight plain"><figcaption><span>generate ```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">这时候就能发现这些文件夹出现在oublic文件夹下</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">接下来，激动人心的时候到了，看看项目能不能在本地跑通，在cmd输入</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">&#96;&#96;&#96;hexo s</span></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo generate</span></pre></td></tr></table></figure>
+
+<p>这时候就能发现这些文件夹出现在oublic文件夹下</p>
+<p>接下来，激动人心的时候到了，看看项目能不能在本地跑通，在cmd输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo s</span></pre></td></tr></table></figure>
 
 <p><strong>其实这个s代表server 也可以认为是start 但是实际上全部都打上去是hexo server</strong></p>
 <p>然后命令行就会出现</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">INFO Start processing</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">INFO Hexo is running at http:&#x2F;&#x2F;localhost:4000 . Press Ctrl+C to stop</span></pre></td></tr></table></figure>
-<p>这就说明我们可以在本地的4000端口访问自己的博客网站<br>在浏览器搜索栏输入 <a href="https://localhost:4000" target="_blank" rel="noopener">https://localhost:4000</a> 就可以看到这样的结果<br>![Alt](从0开始创建hexo博客 11-40-56.png)</p>
+<p>这就说明我们可以在本地的4000端口访问自己的博客网站<br>在浏览器搜索栏输入 <a href="https://localhost:4000" target="_blank" rel="noopener">https://localhost:4000</a> 就可以了</p>
 <p>所以只需要三个命令就创建好一个博客了<br>##部署</p>
 <p>接下来我们来将这个初始化的博客进行一下部署，放到 GitHub Pages 上面验证一下其可用性。成功之后我们可以再进行后续的修改，比如修改主题、修改页面配置等等。</p>
 <p>那么怎么把这个页面部署到 GitHub Pages 上面呢，其实 Hexo 已经给我们提供一个命令，利用它我们可以直接将博客一键部署，不需要手动去配置服务器或进行其他的各项配置。</p>
-<figure class="highlight plain"><figcaption><span>d```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">**这个d是deploy**</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">但是呢直接部署会报错吧 因为还没配置，连仓库地址都不知道 怎么部署上去呢？</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">所以就需要修改配置文件</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">打开根目录下的 _config.yml 文件，找到 Deployment 这个地方，把刚才新建的 Repository 的地址贴过来，然后指定分支为 master 分支，最终修改为如下内容：</span></pre></td></tr></table></figure>
-<p>deployment.html<br>deploy:<br>type: git<br>repo: {git repo ssh address}<br>branch: master```<br>repo那边需要加入自己git的远程地址</p>
-<p>当然这时候还是不能直接部署，真觉得改个配置文件就可以了吗？当然不行 这时候还会报错 还欠缺一个支持git部署的插件hexo-deployer-git<br>命令如下<code>cnpm install —save hexo-deployer-git</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo d</span></pre></td></tr></table></figure>
+<p><strong>这个d是deploy</strong></p>
+<p>但是呢直接部署会报错吧 因为还没配置，连仓库地址都不知道 怎么部署上去呢？</p>
+<p>所以就需要修改配置文件</p>
+<p>打开根目录下的 _config.yml 文件，找到 Deployment 这个地方，把刚才新建的 Repository 的地址贴过来，然后指定分支为 master 分支，最终修改为如下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">deployment.html</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">deploy:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">type: git</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">repo: &#123;git repo ssh address&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">branch: master</span></pre></td></tr></table></figure>
+<p>repo那边需要加入自己git的远程地址</p>
+<p>当然这时候还是不能直接部署，真觉得改个配置文件就可以了吗？当然不行 这时候还会报错 还欠缺一个支持git部署的插件hexo-deployer-git<br>命令如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">cnpm install —save hexo-deployer-git</span></pre></td></tr></table></figure>
+
 <p>安装成功后执行部署命令</p>
-<figure class="highlight plain"><figcaption><span>d```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">然后就可以通过github访问</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;&#123;username&#125;.github.io 就可以访问了 如果能正常访问就说明部署成功 如果失败就说明可能有问题</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">## 一些相关配置</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">这边就不具体展开 需要的时候再自行去查找一下配置方法，简单说明几个配置</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">主要是在-config.yml文件中进行配置</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">### 配置主题</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">有的人可能会觉得，诶自带的主题不好看，想从网上找一些好看的主题进行配置</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">诶，其实也是可以自行配置的步骤如下</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">首先，需要从github上找到相应的主题资源然后clone到本地</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">例如：在hexo中比较流行的框架也就是next了，而且在一些功能上也比较完善，不然哪里能在github上有那么大的star量是吧</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">我们的clone也是直接到github上的repository下载下来</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">主题的 GitHub 地址是：https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-theme-next ，我们可以直接把 master 分支 Clone 下来</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">&#96;&#96;&#96;git clone https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-theme-next themes&#x2F;next</span></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo d</span></pre></td></tr></table></figure>
+<p>然后就可以通过github访问<br>https://{username}.github.io<br>就可以访问了 如果能正常访问就说明部署成功 如果失败就说明可能有问题</p>
+<h2 id="一些相关配置"><a href="#一些相关配置" class="headerlink" title="一些相关配置"></a>一些相关配置</h2><p>这边就不具体展开 需要的时候再自行去查找一下配置方法，简单说明几个配置<br>主要是在-config.yml文件中进行配置</p>
+<h3 id="配置主题"><a href="#配置主题" class="headerlink" title="配置主题"></a>配置主题</h3><p>有的人可能会觉得，诶自带的主题不好看，想从网上找一些好看的主题进行配置</p>
+<p>诶，其实也是可以自行配置的步骤如下<br>首先，需要从github上找到相应的主题资源然后clone到本地</p>
+<p>例如：在hexo中比较流行的框架也就是next了，而且在一些功能上也比较完善，不然哪里能在github上有那么大的star量是吧</p>
+<p>我们的clone也是直接到github上的repository下载下来</p>
+<p>主题的 GitHub 地址是：<a href="https://github.com/theme-next/hexo-theme-next" target="_blank" rel="noopener">https://github.com/theme-next/hexo-theme-next</a> ，我们可以直接把 master 分支 Clone 下来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-theme-next themes&#x2F;next</span></pre></td></tr></table></figure>
 
 <p><strong>此时命令行应该退到根目录下</strong></p>
 <p>执行完毕之后 Next 主题的源码就会出现在项目的 themes/next 文件夹下。</p>
 <p>然后我们需要修改下博客所用的主题名称，修改项目根目录下的 _config.yml 文件，找到 theme 字段，修改为 next 即可，修改如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">**这边只是做了一个范例 也可以从GitHub上弄别的主题 操作方面也是大同小异**</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">## 配置主题样式</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">有了主题，但是肯定也要自定义化修改一下配置吧，总不能按着人家原有的样子直接使用吧</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">Next 主题内部也提供了一个配置文件，名字同样叫做 _config.yml，只不过位置不一样，它在 themes&#x2F;next 文件夹下，Next 主题里面所有的功能都可以通过这个配置文件来控制，下文所述的内容都是修改的 themes&#x2F;next&#x2F;_config.yml 文件。</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">### 样式</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">Next 主题还提供了多种样式，风格都是类似黑白的搭配，但整个布局位置不太一样，通过修改配置文件的 scheme 字段即可，我选了 Pisces 样式，修改 _config.yml （注意是 themes&#x2F;next&#x2F;_config.yml 文件）如下：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">&#96;&#96;&#96;scheme: Pisces</span></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">theme：next</span></pre></td></tr></table></figure>
+
+<p><strong>这边只是做了一个范例 也可以从GitHub上弄别的主题 操作方面也是大同小异</strong></p>
+<h2 id="配置主题样式"><a href="#配置主题样式" class="headerlink" title="配置主题样式"></a>配置主题样式</h2><p>有了主题，但是肯定也要自定义化修改一下配置吧，总不能按着人家原有的样子直接使用吧</p>
+<p>Next 主题内部也提供了一个配置文件，名字同样叫做 _config.yml，只不过位置不一样，它在 themes/next 文件夹下，Next 主题里面所有的功能都可以通过这个配置文件来控制，下文所述的内容都是修改的 themes/next/_config.yml 文件。</p>
+<h3 id="样式"><a href="#样式" class="headerlink" title="样式"></a>样式</h3><p>Next 主题还提供了多种样式，风格都是类似黑白的搭配，但整个布局位置不太一样，通过修改配置文件的 scheme 字段即可，我选了 Pisces 样式，修改 _config.yml （注意是 themes/next/_config.yml 文件）如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">scheme: Pisces</span></pre></td></tr></table></figure>
 
 <p>另外还有几个可选项，比如：<br>Muse，Mist，Pisces，Gemini</p>
 <p>可以根据自己的喜好对其进行更换</p>
@@ -258,24 +297,15 @@
 <h2 id="发布文章"><a href="#发布文章" class="headerlink" title="发布文章"></a>发布文章</h2><p>现在整个博客只有一篇文章，那么如何写文章呢？配置好了博客，当然是关注如何发布文章，不然搭建了有什么用呢？</p>
 <p>接下来，就说明一下如何发布文章</p>
 <p>调用hexo命令</p>
-<figure class="highlight plain"><figcaption><span>n “文章名字”```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">**创建的文章会在source&#x2F;_posts文件夹里面，是markdown格式的，所以需要学一下，但是也没那么难，不像html一样麻烦**</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">文章也有一些必要信息可以添加</span></pre></td></tr></table></figure>
-<hr>
-<p>title: 标题 # 自动创建，如 hello-world<br>date: 日期 # 自动创建，如 2019-09-22 01:47:21<br>tags:</p>
-<ul>
-<li>标签1</li>
-<li>标签2</li>
-<li>标签3<br>categories:</li>
-<li>分类1</li>
-<li>分类2</li>
-</ul>
-<hr>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">添加信息就vans了</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">还有一些别的信息，请查看[https:&#x2F;&#x2F;hexo.io&#x2F;zh-cn&#x2F;docs&#x2F;writing.html](https:&#x2F;&#x2F;hexo.io&#x2F;zh-cn&#x2F;docs&#x2F;writing.html)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">**然后也可以配置一些标签页啥的，具体看看别的，或者在不久的将来，我会再次发布**</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">详见hexo官方文档[https:&#x2F;&#x2F;hexo.io&#x2F;zh-cn&#x2F;docs&#x2F;](https:&#x2F;&#x2F;hexo.io&#x2F;zh-cn&#x2F;docs&#x2F;)以查看相关细节，这里就不一一介绍</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">## 部署脚本</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">部署个脚本，让自己发布的更加舒服点吧，省的还要clean等操作</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">最后我这边还增加了一个简易版的部署脚本，其实就是重新 gererate 下文件，然后重新部署。在根目录下新建一个 deploy.sh 的脚本文件，内容如下：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">&#96;&#96;&#96;hexo clean</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">hexo generate</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">hexo deploy</span></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo n “文章名字”</span></pre></td></tr></table></figure>
 
-<p>然后在部署发布后只要</p>
-<figure class="highlight sh"><figcaption><span>deploy.sh```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">## 自定义域名</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">有的人肯定会觉得github.io不好看吧，所以肯定想自定义个域名，其实也不难</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">将页面修改之后可以用上面的脚本重新部署下博客，其内容便会跟着更新。</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">另外我们也可以在 GitHub 的 Repository 里面设置域名，找到 Settings，拉到下面，可以看到有个 GitHub Pages 的配置项，如图所示：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">![</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">](从0开始创建hexo博客 17-23-01.png)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">下面有个 custom domain 的选项，输入你想自定义的域名地址，然后添加 CNAME 解析就好了。</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">另外下面还有一个 Enforce HTTPS 的选项，GitHub Pages 会在我们配置自定义域名之后自动帮我们配置 HTTPS 服务。刚配置完自定义域名的时候可能这个选项是不可用的，一段时间后等到其可以勾选了，直接勾选即可，这样整个博客就会变成 HTTPS 的协议的了。</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">另外有一个值得注意的地方，如果配置了自定义域名，在目前的情况下，每次部署的时候这个自定义域名的设置是会被自动清除的。所以为了避免这个情况，我们需要在项目目录下面新建一个 CNAME 文件，路径为 <span class="built_in">source</span>/CNAME，内容就是自定义域名。</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">比如我就在 <span class="built_in">source</span> 目录下新建了一个 CNAME 文件，内容为：</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">```oslijw.cn</span></pre></td></tr></table></figure>
+<p><strong>创建的文章会在source/_posts文件夹里面，是markdown格式的，所以需要学一下，但是也没那么难，不像html一样麻烦</strong></p>
+<p>文章也有一些必要信息可以添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">---</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">title: 标题 # 自动创建，如 hello-world</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">date: 日期 # 自动创建，如 2019-09-22 01:47:21</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">tags:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">- 标签1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">- 标签2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">- 标签3</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">categories:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">- 分类1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">- 分类2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">---</span></pre></td></tr></table></figure>
 
-<p>这样避免了每次部署的时候自定义域名被清除的情况了。</p>
-<p>发自我的iPhone</p>
+<p>添加信息就vans了</p>
+<p>还有一些别的信息，请查看<a href="https://hexo.io/zh-cn/docs/writing.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/writing.html</a></p>
+<p><strong>然后也可以配置一些标签页啥的，具体看看别的，或者在不久的将来，我会再次发布</strong><br>详见hexo官方文档<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/</a>以查看相关细节，这里就不一一介绍</p>
 
       
     </div>
@@ -317,9 +347,9 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Erstellt: 2019-12-04 22:56:20" itemprop="dateCreated datePublished" datetime="2019-12-04T22:56:20+08:00">2019-12-04</time>
+              <time title="Created: 2019-12-04 22:56:20" itemprop="dateCreated datePublished" datetime="2019-12-04T22:56:20+08:00">2019-12-04</time>
             </span>
 
           
@@ -384,10 +414,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          Table of Contents
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          Overview
         </li>
       </ul>
 
@@ -407,7 +437,7 @@
           <a href="/archives/">
         
           <span class="site-state-item-count">2</span>
-          <span class="site-state-item-name">Artikel</span>
+          <span class="site-state-item-name">posts</span>
         </a>
       </div>
   </nav>
@@ -438,10 +468,10 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Jason</span>
 </div>
-  <div class="powered-by">Erstellt mit  <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
   <span class="post-meta-divider">|</span>
-  <div class="theme-info">Design – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
   </div>
 
         
