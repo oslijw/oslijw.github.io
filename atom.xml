@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://oslijw.github.io/"/>
-  <updated>2019-12-06T03:29:44.085Z</updated>
+  <updated>2019-12-06T15:17:35.144Z</updated>
   <id>https://oslijw.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>markdown的基本操作</title>
+    <link href="https://oslijw.github.io/2019/12/06/markdown-de-ji-ben-cao-zuo/"/>
+    <id>https://oslijw.github.io/2019/12/06/markdown-de-ji-ben-cao-zuo/</id>
+    <published>2019-12-06T15:17:09.000Z</published>
+    <updated>2019-12-06T15:17:35.144Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;blockquote&gt;
+&lt;p&gt;在使用Markdown之前，你可能需要先了解一下关于markdown的简单语法。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&quot;1-标题&quot;&gt;&lt;a href=&quot;#1-标题&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>如何建立个人博客网站 hexo+github page</title>
