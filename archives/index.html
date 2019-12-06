@@ -19,7 +19,7 @@
 <script id="hexo-configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    hostname: new URL('http://yoursite.com').hostname,
+    hostname: new URL('https://oslijw.github.io').hostname,
     root: '/',
     scheme: 'Muse',
     version: '7.6.0',
@@ -40,7 +40,7 @@
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     },
     localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: '',
+    path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
   };
 </script>
@@ -49,13 +49,13 @@
 <meta name="keywords" content="Python,R,Java,算法,数据挖掘,机器学习">
 <meta property="og:type" content="website">
 <meta property="og:title" content="oslijw">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;archives&#x2F;index.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;oslijw.github.io&#x2F;archives&#x2F;index.html">
 <meta property="og:site_name" content="oslijw">
 <meta property="og:description" content="涉猎编程语言:Java,Python,R,并且会有部分机器学习机器挖掘内容">
 <meta property="og:locale" content="en-CN">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/archives/">
+<link rel="canonical" href="https://oslijw.github.io/archives/">
 
 
 <script id="page-configurations">
@@ -69,7 +69,7 @@
   };
 </script>
 
-  <title>Archiv | oslijw</title>
+  <title>بایگانی | oslijw</title>
   
 
 
@@ -100,6 +100,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="oslijw" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -121,7 +122,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+    <div class="toggle" aria-label="تغییر ناوبری">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -135,12 +136,27 @@
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Startseite</a>
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>صفحه اصلی</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>درباره</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>برچسب ها<span class="badge">0</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>دسته بندی ها<span class="badge">0</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archiv</a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>بایگانی<span class="badge">2</span></a>
 
   </li>
   </ul>
@@ -170,7 +186,7 @@
   <div class="post-block">
     <div class="posts-collapse">
       <div class="collection-title">
-        <span class="collection-header">Öhm..! Insgesamt 2 Artikel. Bleib dran.</span>
+        <span class="collection-header">ام...! 2 برچسب در مجموع. به پست دادن ادامه دهید.</span>
       </div>
 
       
@@ -190,7 +206,7 @@
       </div>
 
       <h2 class="post-title">
-          <a class="post-title-link" href="/2019/12/05/%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E7%BD%91%E7%AB%99-hexo-github-page/" itemprop="url">
+          <a class="post-title-link" href="/2019/12/05/ru-he-jian-li-ge-ren-bo-ke-wang-zhan-hexo-github-page/" itemprop="url">
             <span itemprop="name">如何建立个人博客网站 hexo+github page</span>
           </a>
       </h2>
@@ -246,10 +262,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          فهرست مطالب
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          نمای کلی
         </li>
       </ul>
 
@@ -269,13 +285,32 @@
           <a href="/archives/">
         
           <span class="site-state-item-count">2</span>
-          <span class="site-state-item-name">Artikel</span>
+          <span class="site-state-item-name">پست ها</span>
         </a>
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/oslijw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;oslijw" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:2781939070@qq.com" title="E-Mail → mailto:2781939070@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
 
 
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://github.com/oslijw" title="http:&#x2F;&#x2F;github.com&#x2F;oslijw" rel="noopener" target="_blank">Title</a>
+        </li>
+    </ul>
+  </div>
 
       </div>
 
@@ -300,12 +335,22 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Jason</span>
 </div>
-  <div class="powered-by">Erstellt mit  <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  <div class="powered-by">قدرت گرفته از <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
   <span class="post-meta-divider">|</span>
-  <div class="theme-info">Design – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
+  <div class="theme-info">پوسته – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
   </div>
 
+<div class="powered-by">
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+		本站访客数:<span id="busuanzi_value_site_uv"></span>
+	</span>
+	<span class="post-meta-divider">|</span>
+	<span id="busuanzi_container_site_pv">
+		本站访问量<span id="busuanzi_value_site_pv"></span>
+	</span>
+</div>
         
 
 
