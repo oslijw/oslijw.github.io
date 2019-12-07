@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>图床推荐以及PicGo的好</title>
+    <url>/2019/12/07/tu-chuang-tui-jian-yi-ji-picgo-de-hao/</url>
+    <content><![CDATA[<h2 id="图床的用处"><a href="#图床的用处" class="headerlink" title="图床的用处"></a>图床的用处</h2><p>在发布博客的时候,由于某些特性,我们需要有一个图床来获取图片的地址</p>
+<p>但是呢,我们不能每次要的时候才去找图片,然后复制图片地址吧</p>
+<p>而且最重要的一点是在国内大部分网站都是不让外链的,所以这时候就需要一个外链了</p>
+<h2 id="图床推荐"><a href="#图床推荐" class="headerlink" title="图床推荐"></a>图床推荐</h2><p>下面进入正题</p>
+<p>也许会有很多人和我一样,被贫困所压迫着,哈哈哈哈哈,很真实的大学生现象</p>
+<p>所以这时候就需要有一些免费的图床来用用</p>
+<p>比如:<br>    <a href="https://sm.ms/" target="_blank" rel="noopener">sm.ms</a><br>    <a href="https://postimages.org/" target="_blank" rel="noopener">postimages</a><br>    <a href="https://imgse.com/" target="_blank" rel="noopener">路过图床</a></p>
+<p>当然免费的也有很多,七牛云什么的</p>
+<p>以七牛云为例,大概有10G是免费的,并且提供一段时间的测试域名,但是后期就需要有一个域名来替换临时的测试域名</p>
+<p>也可以用github等途径</p>
+<p>但是免费又不用注册的不香嘛??</p>
+<h2 id="PicGo"><a href="#PicGo" class="headerlink" title="PicGo"></a>PicGo</h2><p>PicGo是一个很好的工具,这样我们以后上传图片的时候就不需要去人家网站上传了</p>
+<p>而且PicGo是一个很好用的工具,所以极力推荐啊!!</p>
+<p><a href="https://github.com/Molunerfinn/picgo/releases" target="_blank" rel="noopener">PicGo下载地址</a></p>
+<p>然后在Assets里面找到对应的安装包下载就好了</p>
+]]></content>
+  </entry>
+  <entry>
     <title>markdown的基本操作</title>
     <url>/2019/12/06/markdown-de-ji-ben-cao-zuo/</url>
     <content><![CDATA[<blockquote>
