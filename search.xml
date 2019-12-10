@@ -52,6 +52,9 @@
 <p><a href="https://github.com/Molunerfinn/picgo/releases" target="_blank" rel="noopener">PicGo下载地址</a></p>
 <p>然后在Assets里面找到对应的安装包下载就好了</p>
 ]]></content>
+      <tags>
+        <tag>图床推荐</tag>
+      </tags>
   </entry>
   <entry>
     <title>markdown的基本操作</title>
@@ -234,6 +237,9 @@ hljs.highlightBlock(block);
 </tr>
 </tbody></table>
 ]]></content>
+      <tags>
+        <tag>markdown</tag>
+      </tags>
   </entry>
   <entry>
     <title>如何建立个人博客网站 hexo+github page</title>
