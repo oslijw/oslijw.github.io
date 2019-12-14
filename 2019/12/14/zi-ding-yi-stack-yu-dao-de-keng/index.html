@@ -457,7 +457,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    547
+                    550
                 </div>
                 
 
@@ -489,21 +489,62 @@
 <p>那么这时候就会有人提问,那我又是怎么创建的呢??</p>
 <p>这时候就要用到java的一个特性–反射</p>
 <p>至于反射,由于近来期末考将近,我能有时间来写这个博客已经实属不易了<br>所以,等我寒假看看书总结一下,反射,这一java特性吧</p>
-<h2 id="解决代码"><a href="#解决代码" class="headerlink" title="解决代码"></a>解决代码</h2><p>‘’’<br>stacks =(T[]) Array.newInstance(Object.class,len);<br>// 利用反射,先反射成一个class对象,然后再强制类型转换会T就可以了<br>// 基于一个数组来建立线性栈,当然也可以建立链式栈<br>‘’’</p>
-<p>在使用前,当然不能直接用,需要先import相关的包<br>‘’’<br>import java.lang.reflect.Array;<br>‘’’</p>
-<p>从import的包也可以看出来是利用反射特性</p>
+<h2 id="解决代码"><a href="#解决代码" class="headerlink" title="解决代码"></a>解决代码</h2><pre><code>stacks =(T[]) Array.newInstance(Object.class,len);
+// 利用反射,先反射成一个class对象,然后再强制类型转换会T就可以了
+// 基于一个数组来建立线性栈,当然也可以建立链式栈</code></pre><p>在使用前,当然不能直接用,需要先import相关的包</p>
+<pre><code>import java.lang.reflect.Array;</code></pre><p>从import的包也可以看出来是利用反射特性</p>
 <h2 id="栈的完整代码"><a href="#栈的完整代码" class="headerlink" title="栈的完整代码"></a>栈的完整代码</h2><p>下面是构建整个栈的代码</p>
-<p>‘’’<br>import java.lang.reflect.Array;</p>
-<p>class stack<T>{<br>    //数组类型的栈<br>    private T[]stacks;<br>    //栈顶的指针,主要用于isempty的判断<br>    private int pointer;<br>    //这些东西不能让外界随便访问,所以就把访问权限设为private<br>    public stack(){<br>        //默认创建一个长度是64的栈<br>        this(64);<br>    }<br>    public stack(int len){<br>        //初始化栈<br>        //长度为len的T类型数组<br>        stacks =(T[]) Array.newInstance(Object.class,len);<br>        //刚刚开始栈里面没有任何的元素所以栈的指针是-1<br>        pointer = -1;<br>    }<br>    public boolean isEmpty(){<br>        //使用三元运算符<br>        return pointer==-1?true:false;<br>    }<br>    public void push(T info){<br>        //入栈操作<br>        pointer ++;<br>        stacks[pointer] = info;<br>    }<br>    public T peek(){<br>        //查看栈顶元素<br>        if (pointer == -1){<br>            return null;<br>        }<br>        return stacks[pointer];<br>    }<br>    public T pop(){<br>        //出栈<br>        T out = stacks[pointer];<br>        pointer –;<br>        return out;<br>    }</p>
-<pre><code>@Override
-public String toString() {
-    StringBuffer sb = new StringBuffer();
-    for (int i = 0;i &lt;= pointer;i++){
-        sb.append(stacks[i]);
-    }
-    return sb.toString();
-}</code></pre><p>}<br>‘’’</p>
+<pre><code>import java.lang.reflect.Array;
 
+class stack&lt;T&gt;{
+    //数组类型的栈
+    private T[]stacks;
+    //栈顶的指针,主要用于isempty的判断
+    private int pointer;
+    //这些东西不能让外界随便访问,所以就把访问权限设为private
+    public stack(){
+        //默认创建一个长度是64的栈
+        this(64);
+    }
+    public stack(int len){
+        //初始化栈
+        //长度为len的T类型数组
+        stacks =(T[]) Array.newInstance(Object.class,len);
+        //刚刚开始栈里面没有任何的元素所以栈的指针是-1
+        pointer = -1;
+    }
+    public boolean isEmpty(){
+        //使用三元运算符
+        return pointer==-1?true:false;
+    }
+    public void push(T info){
+        //入栈操作
+        pointer ++;
+        stacks[pointer] = info;
+    }
+    public T peek(){
+        //查看栈顶元素
+        if (pointer == -1){
+            return null;
+        }
+        return stacks[pointer];
+    }
+    public T pop(){
+        //出栈
+        T out = stacks[pointer];
+        pointer --;
+        return out;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0;i &lt;= pointer;i++){
+            sb.append(stacks[i]);
+        }
+        return sb.toString();
+    }
+}</code></pre>
             </div>
             <hr/>
 
