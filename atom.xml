@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://oslijw.github.io/"/>
-  <updated>2019-12-09T15:05:32.357Z</updated>
+  <updated>2019-12-14T10:52:13.569Z</updated>
   <id>https://oslijw.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>自定义stack遇到的坑</title>
+    <link href="https://oslijw.github.io/2019/12/14/zi-ding-yi-stack-yu-dao-de-keng/"/>
+    <id>https://oslijw.github.io/2019/12/14/zi-ding-yi-stack-yu-dao-de-keng/</id>
+    <published>2019-12-14T10:38:04.000Z</published>
+    <updated>2019-12-14T10:52:13.569Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;什么是栈呢&quot;&gt;&lt;a href=&quot;#什么是栈呢&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="算法" scheme="https://oslijw.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
   
   <entry>
     <title>如何建立一个评论系统利用gittalk</title>

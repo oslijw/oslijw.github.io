@@ -4,13 +4,12 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="markdown的基本操作, Python,R,Java,算法,数据挖掘,机器学习">
-    <meta name="description" content="
-在使用Markdown之前，你可能需要先了解一下关于markdown的简单语法。
-
-1.标题
-使用 # 表示标题，一级标题使用一个 # ，二级标题使用两个 ## ，以此类推，共有六级标题。
-使用 ===== 表示高阶标题，使用 -----">
+    <meta name="keywords" content="自定义stack遇到的坑, Python,R,Java,算法,数据挖掘,机器学习">
+    <meta name="description" content="什么是栈呢栈是一个比较常见而且比较常用的数据结构
+很多语言中也有封装好的栈
+但是呢学习嘛,难免要自己来定义一个栈,来深入的体会学习栈的FILO的特性
+构建栈的时候遇到的困难基于java
+我在构建栈的时候,想利用泛型来建立(麻烦恰恰是由于泛型">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +17,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>markdown的基本操作 | oslijw</title>
+    <title>自定义stack遇到的坑 | oslijw</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -309,13 +308,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/2.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        markdown的基本操作
+                        自定义stack遇到的坑
                     </div>
                 </div>
             </div>
@@ -433,8 +432,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/markdown/">
-                                <span class="chip bg-color">markdown</span>
+                            <a href="/tags/%E7%AE%97%E6%B3%95/">
+                                <span class="chip bg-color">算法</span>
                             </a>
                         
                     </div>
@@ -449,7 +448,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2019-12-06
+                    2019-12-14
                 </div>
                 
 
@@ -458,14 +457,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    1.1k
+                    547
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    3 Min
+                    2 Min
                 </div>
                 
 				
@@ -481,183 +480,29 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <blockquote>
-<p>在使用Markdown之前，你可能需要先了解一下关于markdown的简单语法。</p>
-</blockquote>
-<h3 id="1-标题"><a href="#1-标题" class="headerlink" title="1.标题"></a>1.标题</h3><ul>
-<li>使用 <code>#</code> 表示标题，一级标题使用一个 <code>#</code> ，二级标题使用两个 <code>##</code> ，以此类推，共有六级标题。</li>
-<li>使用 <code>=====</code> 表示高阶标题，使用 <code>---------</code> 表示次阶标题。</li>
-</ul>
-<ol>
-<li><code>#</code> 和标题之间记得有个空格哦。</li>
-<li><code>====</code> 和 <code>----</code> 表示标题时，大于等于2个都可以表示。</li>
-</ol>
-<h3 id="2-引用"><a href="#2-引用" class="headerlink" title="2.引用"></a>2.引用</h3><p>使用 <code>&gt;</code> 表示引用， <code>&gt;&gt;</code> 表示引用里面再套一层引用，依次类推。</p>
-<ol>
-<li>如果 <code>&gt;</code> 和 <code>&gt;&gt;</code> 嵌套使用的话，从 <code>&gt;&gt;</code> 退到 <code>&gt;</code> 时，必须之间要加一个空格或者 <code>&gt;</code> 作为过渡，否则默认为下一行和上一行是同一级别的引用。如示例所示。</li>
-<li>引用标记里可以使用其他标记，如：有序列表或无序列表标记，代码标记等。</li>
-</ol>
-<p>示例</p>
-<blockquote>
-<p>这是一级引用</p>
-<blockquote>
-<p>这是二级引用</p>
-<blockquote>
-<p>这是三级引用</p>
-</blockquote>
-</blockquote>
-</blockquote>
-<blockquote>
-<p>这是一级引用</p>
-</blockquote>
-<h3 id="3-代码块"><a href="#3-代码块" class="headerlink" title="3 代码块"></a>3 代码块</h3><p>使用3个连续的` 符号包围起来表示代码块。</p>
-<ol>
-<li>本文档所有使用讲解Markdown语法标记示例的地方都是使用代码块标记的。</li>
-<li>代码块前后都得有换行哦</li>
-</ol>
-<p>示例</p>
-<pre><code>[在这输入链接标题]()$(document).ready(function() {
-$(&#39;pre code&#39;).each(function(i, block) {
-hljs.highlightBlock(block);
-});
-});
-</code></pre><h3 id="4-行内代码"><a href="#4-行内代码" class="headerlink" title="4 行内代码"></a>4 行内代码</h3><p>使用``表示行内代码。本页部分文字中间的英文字母就是使用行内代码标记标记的。</p>
-<p>示例</p>
-<p>这是 <code>javascript</code> 代码</p>
-<h4 id="5-链接"><a href="#5-链接" class="headerlink" title="5 链接"></a>5 链接</h4><p>使用 <code>[](link)</code> 表示行内链接。其中：</p>
-<ul>
-<li><code>[]</code> 内的内容为要添加链接的文字。</li>
-<li><code>link</code> 为链接地址。</li>
-</ul>
-<p>示例</p>
-<p>我觉得<a href="https://appsto.re/cn/jK8Cbb.i" target="_blank" rel="noopener">Markdown</a>真是个棒棒哒的编辑器😊.</p>
-<h3 id="6-数学公式"><a href="#6-数学公式" class="headerlink" title="6 数学公式"></a>6 数学公式</h3><p><code>$</code>包围的区块将会解析为数学公式，连续的<code>$$</code>将独占一行并居中显示</p>
-<p>示例</p>
-<p>当 $a \ne 0$, 此方程式有两个解 $ax^2 + bx + c = 0$，他们是</p>
-<p>$$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$</p>
-<h3 id="7-导入图片"><a href="#7-导入图片" class="headerlink" title="7 导入图片"></a>7 导入图片</h3><p>使用 <code>![Alt text](/path/to/img.jpg)</code> 导入图片。其中：</p>
-<ul>
-<li><code>Alt text</code> 为如果图片无法显示时显示的文字；</li>
-<li><code>/path/to/img.jpg</code> 为图片所在路径；</li>
-</ul>
-<p>点击辅助键盘中的添加图片按钮可快捷添加图片</p>
-<ol>
-<li>==本地引用==是图片直接存储到本地通过相对路径引用，无需网络连接</li>
-<li>==上传图片==将把图片上传至图床，这样在文档或图片移动时认可访问图片</li>
-</ol>
-<p>示例</p>
-<p><img src="https://i.loli.net/2019/11/16/h4lWxQbjvUwN7XZ.jpg" alt="Markdown"></p>
-<h3 id="8-Todo-List"><a href="#8-Todo-List" class="headerlink" title="8 Todo List"></a>8 Todo List</h3><p>小写x表示已完成， 空格表示未完成</p>
-<ul>
-<li><input checked="" disabled="" type="checkbox"> 支持数学公式</li>
-<li><input checked="" disabled="" type="checkbox"> 支持TodoList</li>
-<li><input checked="" disabled="" type="checkbox"> 支持自定义样式</li>
-<li><input disabled="" type="checkbox"> 支持自定义图床</li>
-</ul>
-<h3 id="9-粗体，斜体，高亮和删除线"><a href="#9-粗体，斜体，高亮和删除线" class="headerlink" title="9 粗体，斜体，高亮和删除线"></a>9 粗体，斜体，高亮和删除线</h3><ol>
-<li>使用 <code>**</code> 或者 <code>__</code> 表示<strong>粗体</strong>。</li>
-<li>使用 <code>*</code> 或者 <code>_</code> 表示<em>斜体</em>。</li>
-<li>使用<code>==</code>表示==高亮==</li>
-<li>使用<code>~~</code>表示<del>删除</del></li>
-<li><code>*</code>，<code>=</code> 或 <code>_</code> 的后面<strong>不要跟空格哦</strong></li>
-</ol>
-<h3 id="10-列表"><a href="#10-列表" class="headerlink" title="10 列表"></a>10 列表</h3><p>使用 <code>1. 2. 3.</code> 表示有序列表，使用 <code>*</code> 或 <code>-</code> 或 <code>+</code> 表示无序列表。</p>
-<ol>
-<li>无序列表或有序列表标记和后面的文字之间要有一个空格隔开。</li>
-<li>有序列表标记不是按照你写的数字进行显示的，而是根据当前有序列表标记所在位置显示的，如示例1所示。</li>
-<li>无序列表的项目符号是按照实心圆、空心圆、实心方格的层级关系递进的，如例2所示。通常情况下，同一层级使用同一种标记表示，便于自己查看和管理。</li>
-</ol>
-<h4 id="例1：有序列表"><a href="#例1：有序列表" class="headerlink" title="例1：有序列表"></a>例1：有序列表</h4><ol>
-<li>第一点</li>
-<li>第二点</li>
-<li>第三点</li>
-</ol>
-<h4 id="例2：无序列表"><a href="#例2：无序列表" class="headerlink" title="例2：无序列表"></a>例2：无序列表</h4><ul>
-<li>一级无序列表内容</li>
-</ul>
-<ul>
-<li>二级无序列表内容</li>
-</ul>
-<ul>
-<li>二级无序列表内容</li>
-<li>三级无序列表内容</li>
-<li>三级无序列表内容</li>
-</ul>
-<ul>
-<li>一级无序列表内容</li>
-</ul>
-<ul>
-<li>二级无序列表内容</li>
-</ul>
-<h3 id="11-分割线"><a href="#11-分割线" class="headerlink" title="11 分割线"></a>11 分割线</h3><p>使用 <code>---</code> 或者 <code>***</code> 或者 <code>* * *</code> 表示水平分割线。</p>
-<ol>
-<li>只要 <code>*</code> 或者 <code>-</code> 大于等于三个就可组成一条平行线。</li>
-<li>使用 <code>---</code> 作为水平分割线时，要在它的前后都空一行，防止 <code>---</code> 被当成标题标记的表示方式。</li>
-</ol>
-<p>示例</p>
-<hr>
-<hr>
-<hr>
-<h3 id="12表格"><a href="#12表格" class="headerlink" title="12表格"></a>12表格</h3><p>上面空一行下面空两行</p>
-<table>
-<thead>
-<tr>
-<th>Heading</th>
-<th>Heading</th>
-<th>Heading</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Cell</td>
-<td>Cell</td>
-<td>Cell</td>
-</tr>
-<tr>
-<td>Cell</td>
-<td>Cell</td>
-<td>Cell</td>
-</tr>
-</tbody></table>
-<p>添加边框:</p>
-<table>
-<thead>
-<tr>
-<th>Heading</th>
-<th>Heading</th>
-<th>Heading</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Cell</td>
-<td>Cell</td>
-<td>Cell</td>
-</tr>
-<tr>
-<td>Cell</td>
-<td>Cell</td>
-<td>Cell</td>
-</tr>
-</tbody></table>
-<p>对齐方式:</p>
-<table>
-<thead>
-<tr>
-<th align="left">Heading</th>
-<th align="center">Heading</th>
-<th align="right">Heading</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">Left</td>
-<td align="center">Center</td>
-<td align="right">Right</td>
-</tr>
-<tr>
-<td align="left">Left</td>
-<td align="center">Center</td>
-<td align="right">Right</td>
-</tr>
-</tbody></table>
+                <h2 id="什么是栈呢"><a href="#什么是栈呢" class="headerlink" title="什么是栈呢"></a>什么是栈呢</h2><p>栈是一个比较常见而且比较常用的数据结构</p>
+<p>很多语言中也有封装好的栈</p>
+<p>但是呢<br>学习嘛,难免要自己来定义一个栈,来深入的体会学习栈的FILO的特性</p>
+<h2 id="构建栈的时候遇到的困难"><a href="#构建栈的时候遇到的困难" class="headerlink" title="构建栈的时候遇到的困难"></a>构建栈的时候遇到的困难</h2><p><strong>基于java</strong></p>
+<p>我在构建栈的时候,想利用泛型来建立<br>(麻烦恰恰是由于泛型的一些特性)</p>
+<p>在泛型中,如果要在类中利用泛型参数来创建对象,是不能直接用new的</p>
+<p>那么这时候就会有人提问,那我又是怎么创建的呢??</p>
+<p>这时候就要用到java的一个特性–反射</p>
+<p>至于反射,由于近来期末考将近,我能有时间来写这个博客已经实属不易了<br>所以,等我寒假看看书总结一下,反射,这一java特性吧</p>
+<h2 id="解决代码"><a href="#解决代码" class="headerlink" title="解决代码"></a>解决代码</h2><p>‘’’<br>stacks =(T[]) Array.newInstance(Object.class,len);<br>// 利用反射,先反射成一个class对象,然后再强制类型转换会T就可以了<br>// 基于一个数组来建立线性栈,当然也可以建立链式栈<br>‘’’</p>
+<p>在使用前,当然不能直接用,需要先import相关的包<br>‘’’<br>import java.lang.reflect.Array;<br>‘’’</p>
+<p>从import的包也可以看出来是利用反射特性</p>
+<h2 id="栈的完整代码"><a href="#栈的完整代码" class="headerlink" title="栈的完整代码"></a>栈的完整代码</h2><p>下面是构建整个栈的代码</p>
+<p>‘’’<br>import java.lang.reflect.Array;</p>
+<p>class stack<T>{<br>    //数组类型的栈<br>    private T[]stacks;<br>    //栈顶的指针,主要用于isempty的判断<br>    private int pointer;<br>    //这些东西不能让外界随便访问,所以就把访问权限设为private<br>    public stack(){<br>        //默认创建一个长度是64的栈<br>        this(64);<br>    }<br>    public stack(int len){<br>        //初始化栈<br>        //长度为len的T类型数组<br>        stacks =(T[]) Array.newInstance(Object.class,len);<br>        //刚刚开始栈里面没有任何的元素所以栈的指针是-1<br>        pointer = -1;<br>    }<br>    public boolean isEmpty(){<br>        //使用三元运算符<br>        return pointer==-1?true:false;<br>    }<br>    public void push(T info){<br>        //入栈操作<br>        pointer ++;<br>        stacks[pointer] = info;<br>    }<br>    public T peek(){<br>        //查看栈顶元素<br>        if (pointer == -1){<br>            return null;<br>        }<br>        return stacks[pointer];<br>    }<br>    public T pop(){<br>        //出栈<br>        T out = stacks[pointer];<br>        pointer –;<br>        return out;<br>    }</p>
+<pre><code>@Override
+public String toString() {
+    StringBuffer sb = new StringBuffer();
+    for (int i = 0;i &lt;= pointer;i++){
+        sb.append(stacks[i]);
+    }
+    return sb.toString();
+}</code></pre><p>}<br>‘’’</p>
 
             </div>
             <hr/>
@@ -683,7 +528,7 @@ hljs.highlightBlock(block);
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://oslijw.github.io/2019/12/06/markdown-de-ji-ben-cao-zuo/">https://oslijw.github.io/2019/12/06/markdown-de-ji-ben-cao-zuo/</a>
+                    <a href="https://oslijw.github.io/2019/12/14/zi-ding-yi-stack-yu-dao-de-keng/">https://oslijw.github.io/2019/12/14/zi-ding-yi-stack-yu-dao-de-keng/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -721,8 +566,8 @@ hljs.highlightBlock(block);
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/markdown/">
-                                    <span class="chip bg-color">markdown</span>
+                                <a href="/tags/%E7%AE%97%E6%B3%95/">
+                                    <span class="chip bg-color">算法</span>
                                 </a>
                             
                         </div>
@@ -893,7 +738,7 @@ hljs.highlightBlock(block);
         repo: 'oslijw.github.io',
         owner: 'oslijw',
         admin: "oslijw",
-        id: '2019-12-06T23-17-09',
+        id: '2019-12-14T18-38-04',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -914,33 +759,34 @@ hljs.highlightBlock(block);
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
             <div class="card">
-                <a href="/2019/12/07/tu-chuang-tui-jian-yi-ji-picgo-de-hao/">
+                <a href="/2019/12/14/zi-ding-yi-stack-yu-dao-de-keng/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="图床推荐以及PicGo的好">
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="自定义stack遇到的坑">
                         
-                        <span class="card-title">图床推荐以及PicGo的好</span>
+                        <span class="card-title">自定义stack遇到的坑</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            图床的用处在发布博客的时候,由于某些特性,我们需要有一个图床来获取图片的地址
-但是呢,我们不能每次要的时候才去找图片,然后复制图片地址吧
-而且最重要的一点是在国内大部分网站都是不让外链的,所以这时候就需要一个外链了
-图床推荐下面进入正题
-也
+                            什么是栈呢栈是一个比较常见而且比较常用的数据结构
+很多语言中也有封装好的栈
+但是呢学习嘛,难免要自己来定义一个栈,来深入的体会学习栈的FILO的特性
+构建栈的时候遇到的困难基于java
+我在构建栈的时候,想利用泛型来建立(麻烦恰恰是由于泛型
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2019-12-07
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2019-12-14
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -949,11 +795,12 @@ hljs.highlightBlock(block);
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%9B%BE%E5%BA%8A%E6%8E%A8%E8%8D%90/">
-                        <span class="chip bg-color">图床推荐</span>
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
                     </a>
                     
                 </div>
@@ -967,25 +814,28 @@ hljs.highlightBlock(block);
                 Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/12/05/ru-he-jian-li-ge-ren-bo-ke-wang-zhan-hexo-github-page/">
+                <a href="/2019/12/09/ru-he-jian-li-yi-ge-ping-lun-xi-tong-li-yong-gitalk/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="如何建立个人博客网站 hexo+github page">
+                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="如何建立一个评论系统利用gittalk">
                         
-                        <span class="card-title">如何建立个人博客网站 hexo+github page</span>
+                        <span class="card-title">如何建立一个评论系统利用gittalk</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            建立属于自己的博客网站基于github和hexo博客框架博客在当前世界中对于程序员而言是比较有影响的能长期积累发布博客并且质量比较高的话有利于自己在很多方面的发展有的人选择基于现有的博客网站，有的人会想自己来创建一个
-在这里先跟大家说一些准
+                            基于gitalk建立博客评论功能博客建好了,万一有人想问一些操作呢?
+有的人可能说可以通过放在博客上的qq什么的联系到
+但是,自己搭一个功能,不香嘛??
+那就记录一下怎么搭建评论功能吧
+别用gitment 好像有点问题和我一样用gitalk
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2019-12-05
+                                <i class="far fa-clock fa-fw icon-date"></i>2019-12-09
                             </span>
                         <span class="publish-author">
                             
@@ -994,6 +844,14 @@ hljs.highlightBlock(block);
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/gitalk/">
+                        <span class="chip bg-color">gitalk</span>
+                    </a>
+                    
                 </div>
                 
             </div>
