@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://oslijw.github.io/"/>
-  <updated>2019-12-14T10:55:51.125Z</updated>
+  <updated>2019-12-26T15:20:25.639Z</updated>
   <id>https://oslijw.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>翻转链表</title>
+    <link href="https://oslijw.github.io/2019/12/26/fan-zhuan-lian-biao/"/>
+    <id>https://oslijw.github.io/2019/12/26/fan-zhuan-lian-biao/</id>
+    <published>2019-12-26T15:05:49.000Z</published>
+    <updated>2019-12-26T15:20:25.639Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;链表的翻转&quot;&gt;&lt;a href=&quot;#链表的翻转&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="算法" scheme="https://oslijw.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
   
   <entry>
     <title>自定义stack遇到的坑</title>

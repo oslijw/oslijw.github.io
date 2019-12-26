@@ -4,8 +4,14 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="contact, Python,R,Java,算法,数据挖掘,机器学习">
-    <meta name="description" content="contact | oslijw">
+    <meta name="keywords" content="翻转链表, Python,R,Java,算法,数据挖掘,机器学习">
+    <meta name="description" content="链表的翻转对于链表如何执行翻转操作是数据结构的一个很基本的操作必须会的操作
+###前提
+准备好链表 line
+假设链表带头指针head
+翻转操作解析使用三个指针来记住位置
+font p last 三个工作指针 等下说明为什么要用三个指针
+首">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +19,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>contact | oslijw</title>
+    <title>翻转链表 | oslijw</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -304,13 +310,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        contact
+                        翻转链表
                     </div>
                 </div>
             </div>
@@ -426,9 +432,13 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">No tag</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E7%AE%97%E6%B3%95/">
+                                <span class="chip bg-color">算法</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -440,7 +450,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2019-12-06
+                    2019-12-26
                 </div>
                 
 
@@ -449,7 +459,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    0
+                    450
                 </div>
                 
 
@@ -472,7 +482,49 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h2 id="链表的翻转"><a href="#链表的翻转" class="headerlink" title="链表的翻转"></a>链表的翻转</h2><p>对于链表如何执行翻转操作是数据结构的一个很基本的操作必须会的操作</p>
+<p>###前提</p>
+<p>准备好链表 line</p>
+<p>假设链表带头指针head</p>
+<h3 id="翻转操作解析"><a href="#翻转操作解析" class="headerlink" title="翻转操作解析"></a>翻转操作解析</h3><p>使用三个指针来记住位置</p>
+<p>font p last 三个工作指针 等下说明为什么要用三个指针</p>
+<p>首先需要把font赋值head.next节点</p>
+<pre><code>font = head.next</code></pre><p>思路是先把p的next指向font 由于last可以辅助记住p.next的地址</p>
+<p>所以不需要担心p后面由于next域变换而丢失</p>
+<p>这样子就逆转了一个连接</p>
+<p>接下来就开始遍历就可以了</p>
+<p>最后需要思考一下,循环在什么时候停止</p>
+<p>是p==null还是last==null呢</p>
+<p>答案自然是p==null</p>
+<p>理由是last是记住p的后继节点是作用,而p是真正的工作指针,而font是辅助记住p的前面节点位置</p>
+<p>所以当p==null为true的时候自然就说明要停止</p>
+<p>然后就把head.next赋值给font就可以了</p>
+<h3 id="具体方法代码"><a href="#具体方法代码" class="headerlink" title="具体方法代码"></a>具体方法代码</h3><pre><code> public void reverse(){
+        //起始是第一个节点
+        Node font = head.next;
+        //处理中心节点
+        Node p;
+        Node last;
+        for (p=font.next;p!=null;p=last){
+            //从第二个节点开始操作
+            if (font == head.next){
+                //把第一个节点设置为null
+                //如果不设置成null最后在遍历的时候会出现问题
+        //就会变成类似自己遍历自己的样子
+                font.next =null;
+            }
+            //事先把p.next赋给指针last
+            last = p.next;
+            //把p节点的指针域指向上一个节点
+            p.next = font;
+            //把指针下移
+            font = p;
+            //三个指针下移
+        }
+        //头指针指向最后一个节点
+        head.next = font;
+    }</code></pre><h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>感觉这个有点没说清楚 没办法表达好自己的思想</p>
+
             </div>
             <hr/>
 
@@ -497,7 +549,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://oslijw.github.io/contact/index.html">https://oslijw.github.io/contact/index.html</a>
+                    <a href="https://oslijw.github.io/2019/12/26/fan-zhuan-lian-biao/">https://oslijw.github.io/2019/12/26/fan-zhuan-lian-biao/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -534,7 +586,11 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">No tag</span>
+                            
+                                <a href="/tags/%E7%AE%97%E6%B3%95/">
+                                    <span class="chip bg-color">算法</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -703,7 +759,7 @@
         repo: 'oslijw.github.io',
         owner: 'oslijw',
         admin: "oslijw",
-        id: '2019-12-06T18-31-36',
+        id: '2019-12-26T23-05-49',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -729,24 +785,30 @@
                 <i class="far fa-dot-circle"></i>&nbsp;Current
             </div>
             <div class="card">
-                <a href="/contact/index.html">
+                <a href="/2019/12/26/fan-zhuan-lian-biao/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="contact">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="翻转链表">
                         
-                        <span class="card-title">contact</span>
+                        <span class="card-title">翻转链表</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            链表的翻转对于链表如何执行翻转操作是数据结构的一个很基本的操作必须会的操作
+###前提
+准备好链表 line
+假设链表带头指针head
+翻转操作解析使用三个指针来记住位置
+font p last 三个工作指针 等下说明为什么要用三个指针
+首
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2019-12-06
+                                <i class="far fa-clock fa-fw icon-date"></i>2019-12-26
                             </span>
                         <span class="publish-author">
                             
@@ -758,33 +820,45 @@
                 </div>
 
                 
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                </div>
+                
             </div>
         </div>
         
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                Current&nbsp;<i class="far fa-dot-circle"></i>
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/contact/index.html">
+                <a href="/2019/12/14/zi-ding-yi-stack-yu-dao-de-keng/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="contact">
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="自定义stack遇到的坑">
                         
-                        <span class="card-title">contact</span>
+                        <span class="card-title">自定义stack遇到的坑</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            什么是栈呢栈是一个比较常见而且比较常用的数据结构
+很多语言中也有封装好的栈
+但是呢学习嘛,难免要自己来定义一个栈,来深入的体会学习栈的FILO的特性
+构建栈的时候遇到的困难基于java
+我在构建栈的时候,想利用泛型来建立(麻烦恰恰是由于泛型
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2019-12-06
+                                <i class="far fa-clock fa-fw icon-date"></i>2019-12-14
                             </span>
                         <span class="publish-author">
                             
@@ -794,7 +868,14 @@
                         </span>
                     </div>
                 </div>
-
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>

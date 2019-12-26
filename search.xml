@@ -1,6 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>翻转链表</title>
+    <url>/2019/12/26/fan-zhuan-lian-biao/</url>
+    <content><![CDATA[<h2 id="链表的翻转"><a href="#链表的翻转" class="headerlink" title="链表的翻转"></a>链表的翻转</h2><p>对于链表如何执行翻转操作是数据结构的一个很基本的操作必须会的操作</p>
+<p>###前提</p>
+<p>准备好链表 line</p>
+<p>假设链表带头指针head</p>
+<h3 id="翻转操作解析"><a href="#翻转操作解析" class="headerlink" title="翻转操作解析"></a>翻转操作解析</h3><p>使用三个指针来记住位置</p>
+<p>font p last 三个工作指针 等下说明为什么要用三个指针</p>
+<p>首先需要把font赋值head.next节点</p>
+<pre><code>font = head.next</code></pre><p>思路是先把p的next指向font 由于last可以辅助记住p.next的地址</p>
+<p>所以不需要担心p后面由于next域变换而丢失</p>
+<p>这样子就逆转了一个连接</p>
+<p>接下来就开始遍历就可以了</p>
+<p>最后需要思考一下,循环在什么时候停止</p>
+<p>是p==null还是last==null呢</p>
+<p>答案自然是p==null</p>
+<p>理由是last是记住p的后继节点是作用,而p是真正的工作指针,而font是辅助记住p的前面节点位置</p>
+<p>所以当p==null为true的时候自然就说明要停止</p>
+<p>然后就把head.next赋值给font就可以了</p>
+<h3 id="具体方法代码"><a href="#具体方法代码" class="headerlink" title="具体方法代码"></a>具体方法代码</h3><pre><code> public void reverse(){
+        //起始是第一个节点
+        Node font = head.next;
+        //处理中心节点
+        Node p;
+        Node last;
+        for (p=font.next;p!=null;p=last){
+            //从第二个节点开始操作
+            if (font == head.next){
+                //把第一个节点设置为null
+                //如果不设置成null最后在遍历的时候会出现问题
+        //就会变成类似自己遍历自己的样子
+                font.next =null;
+            }
+            //事先把p.next赋给指针last
+            last = p.next;
+            //把p节点的指针域指向上一个节点
+            p.next = font;
+            //把指针下移
+            font = p;
+            //三个指针下移
+        }
+        //头指针指向最后一个节点
+        head.next = font;
+    }</code></pre><h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>感觉这个有点没说清楚 没办法表达好自己的思想</p>
+]]></content>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>自定义stack遇到的坑</title>
     <url>/2019/12/14/zi-ding-yi-stack-yu-dao-de-keng/</url>
     <content><![CDATA[<h2 id="什么是栈呢"><a href="#什么是栈呢" class="headerlink" title="什么是栈呢"></a>什么是栈呢</h2><p>栈是一个比较常见而且比较常用的数据结构</p>
