@@ -4,12 +4,13 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="图床推荐以及PicGo的好, Python,R,Java,算法,数据挖掘,机器学习">
-    <meta name="description" content="图床的用处在发布博客的时候,由于某些特性,我们需要有一个图床来获取图片的地址
-但是呢,我们不能每次要的时候才去找图片,然后复制图片地址吧
-而且最重要的一点是在国内大部分网站都是不让外链的,所以这时候就需要一个外链了
-图床推荐下面进入正题
-也">
+    <meta name="keywords" content="堆排序, Python,R,Java,算法,数据挖掘,机器学习">
+    <meta name="description" content="问题的提出给定一个数组,要求把前n位的元素移动到最后面,这n个顺序不变
+然后后面的其他元素全部向前移动,顺序也保持
+大概就是
+[a,b,c,d,e]==循环左移动2位==&amp;gt;[c,d,e,a,b]
+要求以最好的效率进行
+思路算法分析从两">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +18,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>图床推荐以及PicGo的好 | oslijw</title>
+    <title>堆排序 | oslijw</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,13 +287,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        图床推荐以及PicGo的好
+                        堆排序
                     </div>
                 </div>
             </div>
@@ -410,8 +411,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%9B%BE%E5%BA%8A%E6%8E%A8%E8%8D%90/">
-                                <span class="chip bg-color">图床推荐</span>
+                            <a href="/tags/%E7%AE%97%E6%B3%95/">
+                                <span class="chip bg-color">算法</span>
                             </a>
                         
                     </div>
@@ -426,7 +427,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2019-12-07
+                    2020-01-06
                 </div>
                 
 
@@ -435,14 +436,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    332
+                    950
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    1 Min
+                    4 Min
                 </div>
                 
 				
@@ -458,22 +459,130 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="图床的用处"><a href="#图床的用处" class="headerlink" title="图床的用处"></a>图床的用处</h2><p>在发布博客的时候,由于某些特性,我们需要有一个图床来获取图片的地址</p>
-<p>但是呢,我们不能每次要的时候才去找图片,然后复制图片地址吧</p>
-<p>而且最重要的一点是在国内大部分网站都是不让外链的,所以这时候就需要一个外链了</p>
-<h2 id="图床推荐"><a href="#图床推荐" class="headerlink" title="图床推荐"></a>图床推荐</h2><p>下面进入正题</p>
-<p>也许会有很多人和我一样,被贫困所压迫着,哈哈哈哈哈,很真实的大学生现象</p>
-<p>所以这时候就需要有一些免费的图床来用用</p>
-<p>比如:<br>    <a href="https://sm.ms/" target="_blank" rel="noopener">sm.ms</a><br>    <a href="https://postimages.org/" target="_blank" rel="noopener">postimages</a><br>    <a href="https://imgse.com/" target="_blank" rel="noopener">路过图床</a></p>
-<p>当然免费的也有很多,七牛云什么的</p>
-<p>以七牛云为例,大概有10G是免费的,并且提供一段时间的测试域名,但是后期就需要有一个域名来替换临时的测试域名</p>
-<p>也可以用github等途径</p>
-<p>但是免费又不用注册的不香嘛??</p>
-<h2 id="PicGo"><a href="#PicGo" class="headerlink" title="PicGo"></a>PicGo</h2><p>PicGo是一个很好的工具,这样我们以后上传图片的时候就不需要去人家网站上传了</p>
-<p>而且PicGo是一个很好用的工具,所以极力推荐啊!!</p>
-<p><a href="https://github.com/Molunerfinn/picgo/releases" target="_blank" rel="noopener">PicGo下载地址</a></p>
-<p>然后在Assets里面找到对应的安装包下载就好了</p>
+                <h2 id="问题的提出"><a href="#问题的提出" class="headerlink" title="问题的提出"></a>问题的提出</h2><p>给定一个数组,要求把前n位的元素移动到最后面,这n个顺序不变</p>
+<p>然后后面的其他元素全部向前移动,顺序也保持</p>
+<p>大概就是</p>
+<p>[a,b,c,d,e]==循环左移动2位==&gt;[c,d,e,a,b]</p>
+<p>要求以最好的效率进行</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>算法分析从两个方面入手</p>
+<p>时间效率(时间复杂度)和空间效率(空间复杂度)</p>
+<p>在算法设计的时候往往会更加注意时间复杂度</p>
+<p>一般时候两者是没办法同时达到最大的</p>
+<p>有的人可能会想把前n个取出来<br>然后把后面元素前移就好了</p>
+<p>但是这样的效率真的高嘛?</p>
+<p>试想把前面n个翻转一下 把后面的元素在翻转一下<br>然后把整体数组在翻转一下</p>
+<p>m个元素 迁移n位<br>这样时间效率就是O(m)<br>空间效率就是O(1)<br>:)如果不会分析的话 可以私聊我或者评论一下<br>我找时间写一个简单的分析</p>
+<p>虽然上面的想法的时间复杂度看起来好像也是O(m)<br>但是空间复杂度可就是o(n)了</p>
+<p>可见二者的效率差距之大</p>
+<h2 id="代码的编写"><a href="#代码的编写" class="headerlink" title="代码的编写"></a>代码的编写</h2><p>上面的算法逻辑是比较清晰的</p>
+<p>就是声明一个临时变量 然后进行翻转就可以了</p>
+<p>翻转三次就可以了</p>
+<p>所以这里可能就需要把翻转的代码翻转成一个方法</p>
+<h3 id="翻转方法"><a href="#翻转方法" class="headerlink" title="翻转方法"></a>翻转方法</h3><pre><code>  private static void similarSameCode(int low,int high){
+        int somePlace = 0;
+        char temporaryStorage;//临时变量存储
+        for (int i = low;i &lt; high;i++){
+        //这边就是简单的交换值
+            temporaryStorage = chain[i];
+            chain[i] = chain[high - 1 - somePlace];
+            chain[high - 1 - somePlace] = temporaryStorage;
+            somePlace ++;
+            if (somePlace == (high -1 -low) /2 + 1){
+                break;
+            }
+        }</code></pre><h3 id="翻转三次"><a href="#翻转三次" class="headerlink" title="翻转三次"></a>翻转三次</h3><p>一次翻转搞好了</p>
+<p>接下来只需要在主方法里面进行三次就可以了</p>
+<pre><code>/*原来代码里面是按习惯声明了一个翻转数组类
+  然后我也懒得调了
+  就将就着看吧
+  */
+  public class Demo2_1 {
+    //测试类
+    public static void main(String[] args) {
+        //产生随机整数,以逆转
+        ReverseChain a = new ReverseChain();
+        System.out.println(&quot;原来数组的亚子: &quot; + a.getChain());
+        System.out.print(&quot;循环左移后: &quot;);
+        System.out.println(a);
+        int len = a.getChainLength();
+        int i = (int)(Math.random() * len);
+        System.out.println(&quot;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*&quot;);
+        System.out.println(&quot;循环左移&quot; + i + &quot;位&quot;);
+        ReverseChain b = new ReverseChain(i);
+        System.out.println(&quot;原来数组的亚子和上面一样,就是可能左移位数有随机数生成会有区别&quot;);
+        System.out.println(b);
+    }
 
+}
+class ReverseChain{
+    //逆转链类
+    private char[]chain = {&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;f&#39;,&#39;g&#39;,&#39;h&#39;,&#39;i&#39;,&#39;j&#39;,&#39;k&#39;,&#39;l&#39;,&#39;m&#39;,&#39;n&#39;,&#39;o&#39;,&#39;p&#39;,&#39;q&#39;};
+    private int position;//循环左移的位数
+    public ReverseChain(){
+        //默认循环左移5位
+        this(5);
+    }
+    public ReverseChain(int posion){
+        this.position = posion;
+        headle(position);
+    }
+    public int getChainLength(){
+        return chain.length;
+    }
+
+    public String getChain() {
+        char[]chain = {&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;f&#39;,&#39;g&#39;,&#39;h&#39;,&#39;i&#39;,&#39;j&#39;,&#39;k&#39;,&#39;l&#39;,&#39;m&#39;,&#39;n&#39;,&#39;o&#39;,&#39;p&#39;,&#39;q&#39;};
+        int i = 0;
+        StringBuffer sb2 = new StringBuffer(&quot;&quot;);
+        for (char a: chain){
+            if (i == 0) {
+                i++;
+                sb2.append(a);
+            }
+            else {
+                sb2.append(&quot; - &quot; + a);
+            }
+        }
+        String str = sb2.toString();
+        return str;
+    }
+
+    private void headle(int position){
+        //用翻转定律
+        similarSameCode(0,position);
+        similarSameCode(position,chain.length);
+        similarSameCode(0,chain.length);
+    }
+    private static void similarSameCode(int low,int high){
+        int somePlace = 0;
+        char temporaryStorage;//临时变量存储
+        for (int i = low;i &lt; high;i++){
+        //这边就是简单的交换值
+            temporaryStorage = chain[i];
+            chain[i] = chain[high - 1 - somePlace];
+            chain[high - 1 - somePlace] = temporaryStorage;
+            somePlace ++;
+            if (somePlace == (high -1 -low) /2 + 1){
+                break;
+            }
+        }
+    public String toString(){
+        //打印
+        boolean i = true;
+        StringBuffer sb = new StringBuffer();
+        for (char a: chain){
+            if (i) {
+                i = !i;
+                sb.append(a);
+            }
+            else {
+                sb.append(&quot; - &quot; + a);
+            }
+        }
+        String str = sb.toString();
+        return str;
+    }
+}</code></pre>
             </div>
             <hr/>
 
@@ -498,7 +607,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://oslijw.github.io/2019/12/07/tu-chuang-tui-jian-yi-ji-picgo-de-hao/">https://oslijw.github.io/2019/12/07/tu-chuang-tui-jian-yi-ji-picgo-de-hao/</a>
+                    <a href="https://oslijw.github.io/2020/01/06/xun-huan-zuo-yi-ruo-gan-yuan-su/">https://oslijw.github.io/2020/01/06/xun-huan-zuo-yi-ruo-gan-yuan-su/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -536,8 +645,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%9B%BE%E5%BA%8A%E6%8E%A8%E8%8D%90/">
-                                    <span class="chip bg-color">图床推荐</span>
+                                <a href="/tags/%E7%AE%97%E6%B3%95/">
+                                    <span class="chip bg-color">算法</span>
                                 </a>
                             
                         </div>
@@ -708,7 +817,7 @@
         repo: 'oslijw.github.io',
         owner: 'oslijw',
         admin: "oslijw",
-        id: '2019-12-07T11-16-27',
+        id: '2020-01-06T18-38-17',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -729,33 +838,35 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
             <div class="card">
-                <a href="/2019/12/09/ru-he-jian-li-yi-ge-ping-lun-xi-tong-li-yong-gitalk/">
+                <a href="/2020/01/06/xun-huan-zuo-yi-ruo-gan-yuan-su/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="如何建立一个评论系统利用gittalk">
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="堆排序">
                         
-                        <span class="card-title">如何建立一个评论系统利用gittalk</span>
+                        <span class="card-title">堆排序</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            基于gitalk建立博客评论功能博客建好了,万一有人想问一些操作呢?
-有的人可能说可以通过放在博客上的qq什么的联系到
-但是,自己搭一个功能,不香嘛??
-那就记录一下怎么搭建评论功能吧
-别用gitment 好像有点问题和我一样用gitalk
+                            问题的提出给定一个数组,要求把前n位的元素移动到最后面,这n个顺序不变
+然后后面的其他元素全部向前移动,顺序也保持
+大概就是
+[a,b,c,d,e]==循环左移动2位==&gt;[c,d,e,a,b]
+要求以最好的效率进行
+思路算法分析从两
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2019-12-09
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-01-06
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -764,11 +875,12 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/gitalk/">
-                        <span class="chip bg-color">gitalk</span>
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
                     </a>
                     
                 </div>
@@ -782,29 +894,29 @@
                 Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/12/06/markdown-de-ji-ben-cao-zuo/">
+                <a href="/2019/12/26/fan-zhuan-lian-biao/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="markdown的基本操作">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="翻转链表">
                         
-                        <span class="card-title">markdown的基本操作</span>
+                        <span class="card-title">翻转链表</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
-在使用Markdown之前，你可能需要先了解一下关于markdown的简单语法。
-
-1.标题
-使用 # 表示标题，一级标题使用一个 # ，二级标题使用两个 ## ，以此类推，共有六级标题。
-使用 ===== 表示高阶标题，使用 -----
+                            链表的翻转对于链表如何执行翻转操作是数据结构的一个很基本的操作必须会的操作
+前提准备好链表 line
+假设链表带头指针head
+翻转操作解析使用三个指针来记住位置
+font p last 三个工作指针 等下说明为什么要用三个指针
+首先需要把
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2019-12-06
+                                <i class="far fa-clock fa-fw icon-date"></i>2019-12-26
                             </span>
                         <span class="publish-author">
                             
@@ -817,8 +929,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/markdown/">
-                        <span class="chip bg-color">markdown</span>
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
                     </a>
                     
                 </div>
