@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://oslijw.github.io/"/>
-  <updated>2020-01-09T16:18:05.106Z</updated>
+  <updated>2020-01-16T10:56:38.146Z</updated>
   <id>https://oslijw.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>拉勾网爬虫</title>
+    <link href="https://oslijw.github.io/2020/01/16/la-gou-wang-pa-chong/"/>
+    <id>https://oslijw.github.io/2020/01/16/la-gou-wang-pa-chong/</id>
+    <published>2020-01-16T10:32:56.000Z</published>
+    <updated>2020-01-16T10:56:38.146Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;需求-爬取拉勾网某一特定职业对应的招聘岗位&quot;&gt;&lt;a href=&quot;#需求-爬取拉勾网某一特定职业对应的招聘岗位&quot; class=&quot;headerlink&quot; title=&quot;需求: 爬取拉勾网某一特定职业对应的招聘岗位&quot;&gt;&lt;/a&gt;需求:
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="爬虫" scheme="https://oslijw.github.io/tags/%E7%88%AC%E8%99%AB/"/>
+    
+  </entry>
   
   <entry>
     <title>循环移动若干元素</title>

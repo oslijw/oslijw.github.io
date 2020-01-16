@@ -4,8 +4,13 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Python,R,Java,算法,数据挖掘,机器学习">
-    <meta name="description" content="oslijw">
+    <meta name="keywords" content="拉勾网爬虫, Python,R,Java,算法,数据挖掘,机器学习">
+    <meta name="description" content="需求: 爬取拉勾网某一特定职业对应的招聘岗位分析比如我现在需要爬取拉勾网上关于爬虫的岗位
+首先当然是点击拉勾网
+然后在搜索栏搜索爬虫二字
+然后跳转到这个页面
+ctrl+u看一下 果然没有岗位信息 然后试着抓包一下
+发现招聘数据在是json格">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +18,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>oslijw</title>
+    <title>拉勾网爬虫 | oslijw</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -282,13 +287,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        
+                        拉勾网爬虫
                     </div>
                 </div>
             </div>
@@ -404,9 +409,13 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">No tag</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E7%88%AC%E8%99%AB/">
+                                <span class="chip bg-color">爬虫</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -418,7 +427,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2019-12-06
+                    2020-01-16
                 </div>
                 
 
@@ -427,14 +436,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    1
+                    574
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    1 Min
+                    2 Min
                 </div>
                 
 				
@@ -450,16 +459,54 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>404</title>
-<link rel="alternate" href="/atom.xml" title="oslijw" type="application/atom+xml">
-<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
-<body>
-<script type="text/javascript" src="//qzonestyle.gtimg.cn/qzone/hybrid/app/404/search_children.js" charset="utf-8" homePageUrl="/" homePageName="����"></script> 
-</body></html>
+                <h2 id="需求-爬取拉勾网某一特定职业对应的招聘岗位"><a href="#需求-爬取拉勾网某一特定职业对应的招聘岗位" class="headerlink" title="需求: 爬取拉勾网某一特定职业对应的招聘岗位"></a>需求: 爬取拉勾网某一特定职业对应的招聘岗位</h2><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>比如我现在需要爬取拉勾网上关于爬虫的岗位</p>
+<p>首先当然是点击<a href="https://www.lagou.com/" target="_blank" rel="noopener">拉勾网</a></p>
+<p>然后在搜索栏搜索<strong>爬虫</strong>二字</p>
+<p>然后跳转到<br><img src="https://i.loli.net/2020/01/16/anF3N1suDAVXQqv.png" alt="">这个页面</p>
+<p>ctrl+u看一下 果然没有岗位信息 然后试着抓包一下</p>
+<p>发现招聘数据在是json格式的<br><img src="https://i.loli.net/2020/01/16/D7t2TkWZwALOR16.png" alt=""></p>
+<p>还是post请求的啊那第一步想到的肯定是requests.post方法把data一起提交</p>
+<p>但是事情没那么简单 这样的方法会有这样的结果<br><img src="https://i.loli.net/2020/01/16/LHZNmlos1YVJcOe.png" alt=""></p>
+<p>害 这下可咋整</p>
+<p>然后我就搜了一下</p>
+<p>原来要用session对象来弄</p>
+<p>行吧那就用吧,然后果然<br><img src="https://i.loli.net/2020/01/16/AoTBIM7QkGze5jS.png" alt=""><br>成了!!!</p>
+<p>然后接下来就是解析一下然后放到csv文件里面或者数据库里面了</p>
+<h2 id="session"><a href="#session" class="headerlink" title="session"></a>session</h2><p>上面提到了session<br>那么session是什么呢??</p>
+<h3 id="关于session"><a href="#关于session" class="headerlink" title="关于session"></a>关于session</h3><p>session是会话对象</p>
+<p>会话对象让你能够跨请求保持某些参数。</p>
+<p>它也会在同一个 Session 实例发出的所有请求之间保持 cookie</p>
+<p>所以如果你向同一主机发送多个请求，底层的 TCP 连接将会被重用，从而带来显著的性能提升。</p>
+<h3 id="为什么用到session"><a href="#为什么用到session" class="headerlink" title="为什么用到session"></a>为什么用到session</h3><p>可能…我上面忘记加cookie了?</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>说了这么多也没用</p>
+<p>还不如把自己的”内裤”(代码)交出来</p>
+<pre><code># -*- coding: utf-8 -*-
+# coder: oslijw
+# blog : https://oslijw.github.io/
+
+import requests
+
+if __name__ == &#39;__main__&#39;:
+    data = {
+        &#39;first&#39;: &#39;true&#39;,
+        &#39;pn&#39;: &quot;1&quot;,
+        &#39;kd&#39;: &#39;爬虫&#39;,
+    }
+    my_headers = {
+        &#39;User-Agent&#39;: &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36&#39;,
+        &#39;Origin&#39;: &#39;www.lagou.com&#39;,
+        &#39;Referer&#39;: &#39;https://www.lagou.com/jobs/list_%E7%88%AC%E8%99%AB?labelWords=&amp;fromSearch=true&amp;suginput=&#39;,
+        &#39;X-Anit-Forge-Code&#39;: &#39;0&#39;,
+        &#39;X-Anit-Forge-Token&#39;: &#39;None&#39;,
+        &#39;X-Requested-With&#39;: &#39;XMLHttpRequest&#39;
+    }
+    session = requests.session()
+    session.get(&#39;https://www.lagou.com/jobs/list_%E7%88%AC%E8%99%AB?labelWords=&amp;fromSearch=true&amp;suginput=&#39;, headers=my_headers)
+    res = session.post(&#39;https://www.lagou.com/jobs/positionAjax.json?needAddtionalResult=false&#39;, headers=my_headers, data=data)
+    print(res.json())</code></pre><h2 id="接下来就是存储了"><a href="#接下来就是存储了" class="headerlink" title="接下来就是存储了"></a>接下来就是存储了</h2><p>解析一下json格式的数据</p>
+<p>按自己需要存到csv或者数据库里面就可以了</p>
+<p>然后就可以”快乐”的数据分析了</p>
+
             </div>
             <hr/>
 
@@ -484,7 +531,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://oslijw.github.io/404/index.html">https://oslijw.github.io/404/index.html</a>
+                    <a href="https://oslijw.github.io/2020/01/16/la-gou-wang-pa-chong/">https://oslijw.github.io/2020/01/16/la-gou-wang-pa-chong/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -521,7 +568,11 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">No tag</span>
+                            
+                                <a href="/tags/%E7%88%AC%E8%99%AB/">
+                                    <span class="chip bg-color">爬虫</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -690,7 +741,7 @@
         repo: 'oslijw.github.io',
         owner: 'oslijw',
         admin: "oslijw",
-        id: '2019-12-06T18-30-57',
+        id: '2020-01-16T18-32-56',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -716,33 +767,29 @@
                 <i class="far fa-dot-circle"></i>&nbsp;Current
             </div>
             <div class="card">
-                <a href="/404/index.html">
+                <a href="/2020/01/16/la-gou-wang-pa-chong/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="拉勾网爬虫">
                         
-                        <span class="card-title"></span>
+                        <span class="card-title">拉勾网爬虫</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
-
-
-
-404
-
-
-
- 
-
+                            需求: 爬取拉勾网某一特定职业对应的招聘岗位分析比如我现在需要爬取拉勾网上关于爬虫的岗位
+首先当然是点击拉勾网
+然后在搜索栏搜索爬虫二字
+然后跳转到这个页面
+ctrl+u看一下 果然没有岗位信息 然后试着抓包一下
+发现招聘数据在是json格
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2019-12-06
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-01-16
                             </span>
                         <span class="publish-author">
                             
@@ -754,42 +801,46 @@
                 </div>
 
                 
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%88%AC%E8%99%AB/">
+                        <span class="chip bg-color">爬虫</span>
+                    </a>
+                    
+                </div>
+                
             </div>
         </div>
         
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                Current&nbsp;<i class="far fa-dot-circle"></i>
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/404/index.html">
+                <a href="/2020/01/06/xun-huan-zuo-yi-ruo-gan-yuan-su/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
+                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="循环移动若干元素">
                         
-                        <span class="card-title"></span>
+                        <span class="card-title">循环移动若干元素</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
-
-
-
-404
-
-
-
- 
-
+                            问题的提出给定一个数组,要求把前n位的元素移动到最后面,这n个顺序不变
+然后后面的其他元素全部向前移动,顺序也保持
+大概就是
+[a,b,c,d,e]==循环左移动2位==&gt;[c,d,e,a,b]
+要求以最好的效率进行
+思路算法分析从两
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2019-12-06
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-01-06
                             </span>
                         <span class="publish-author">
                             
@@ -799,7 +850,14 @@
                         </span>
                     </div>
                 </div>
-
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">算法</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>
