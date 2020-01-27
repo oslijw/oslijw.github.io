@@ -1,198 +1,967 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search> 
-  
-  
-    
-    <entry>
-      <title>cnki-spider-知网爬虫</title>
-      <link href="/2020/01/27/cnki-spider-zhi-wang-pa-chong/"/>
-      <url>/2020/01/27/cnki-spider-zhi-wang-pa-chong/</url>
-      
-        <content type="html"><![CDATA[<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>在当前信息量爆炸的世界中,如何高效的采集到有效的信息非常关键</p><p>而信息采集又不得不说一下爬虫,自动化采集省的自己去一个一个复制黏贴</p><p>然后呢,刚刚好自己有爬知网(CNKI)的一些小需求,当然就是采集一下摘要什么的做分析研究用的</p><h2 id="爬虫的选择"><a href="#爬虫的选择" class="headerlink" title="爬虫的选择"></a>爬虫的选择</h2><p>说到爬虫,很多人第一念头可能就是Python了,当然我也是用python进行开发</p><p>记录一下自己爬知网的一些心得</p><h2 id="事前准备"><a href="#事前准备" class="headerlink" title="事前准备"></a>事前准备</h2><p>下载python3.6 安装好requests,lxml等必要库</p><h2 id="爬取步骤"><a href="#爬取步骤" class="headerlink" title="爬取步骤"></a>爬取步骤</h2><p>先抓包,抓到详情页的数据包,然后访问看看源码里面是否有对应需要的信息</p><p>emmm假设这一步懂怎么抓包</p><p>接下来就可以开始准备代码的编写</p><h3 id="先导入必要的包"><a href="#先导入必要的包" class="headerlink" title="先导入必要的包"></a>先导入必要的包</h3><pre><code>#!/usr/bin/python# -*- coding: utf-8 -*-# author : oslijwimport requestsimport refrom bs4 import BeautifulSoup as bsimport timeimport randomimport csvimport lxmlfrom lxml import etree</code></pre><h3 id="获取网页源代码"><a href="#获取网页源代码" class="headerlink" title="获取网页源代码"></a>获取网页源代码</h3><p>实际上,需要封装起来,不然到时候改个代码也麻烦</p><pre><code># 获得网页源码def get_page_thing(url):    uapools = [        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0&quot;,        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36&quot;,        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134&quot;,    ]    page_ua = random.choice(uapools)    page_cookies = random.choice(cookies_list)    headers = {        &quot;User_Agent&quot;: page_ua,        &quot;Cookie&quot;: page_cookies,    }    try:        response = requests.get(url,headers = headers,timeout = 3)        response.raise_for_status()        response.encoding = &#39;utf8&#39;# response.apparent_encoding    except Exception as err:        print(&quot;出现了异常情况,异常情况是 : &quot; + str(err))        time.sleep(3*random.random())    return response.text</code></pre><h3 id="使用xpath进行提取"><a href="#使用xpath进行提取" class="headerlink" title="使用xpath进行提取"></a>使用xpath进行提取</h3><pre><code># 使用xpath进行提取并且保存def paser_html(response_text):        tree = etree.HTML(response_text)        for i in range(2, 52, 1):            a_recording = []            detail_url = tree.xpath(&quot;//tr[&quot; + str(i) + &quot;]//a[@class=&#39;fz14&#39;]/@href&quot;)            fn = re.compile(&quot;FileName=(.*?)&amp;&quot;).findall(detail_url[0])            dn = re.compile(&quot;DbName=(.*?)&amp;&quot;).findall(detail_url[0])            dc = re.compile(&quot;DbCode=(.*?)&amp;&quot;).findall(detail_url[0])            detail_url = &quot;https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode={}&amp;dbname={}&amp;filename={}&quot;.format(dc[0],                                                                                                               dn[0],                                                                                                               fn[0])            a_recording.append(detail_url)            store_url(detail_url)            title_keyword_summary = get_title_key_word_summary(paser_detail(detail_url))            a_recording = a_recording + title_keyword_summary            for j in range(3, 5, 1):                title_author_unit = tree.xpath(                    &#39;//table[@class=&quot;GridTableContent&quot;]//tr[&#39; + str(i) + &#39;]/td[&#39; + str(j) + &#39;]/a/text()&#39;)                if len(title_author_unit) == 1:                    a = &quot;&quot;.join(title_author_unit)                else:                    a = &quot;;&quot;.join(title_author_unit)                a_recording.append(a)            if True:                time_database = tree.xpath(                    &quot;//table[@class=&#39;GridTableContent&#39;]//tr[&quot; + str(i) + &quot;]/td[@align=&#39;center&#39;]/text()&quot;)                reference = tree.xpath(&quot;//table//tr[&quot; + str(i) + &quot;]/td[7]/span[@class=&#39;KnowledgeNetcont&#39;]//text()&quot;)                download = tree.xpath(&quot;//table//tr[&quot; + str(i) + &quot;]/td[8]/span[@class=&#39;downloadCount&#39;]//text()&quot;)                if len(reference)!=0:                    ref = reference[0].strip()                else:                    ref = &#39;-&#39;                if len(download) != 0:                    down = download[0].strip()                else:                    down = &#39;-&#39;                atr_time = time_database[0].strip()  # [a_tuple.strip() for a_tuple in time_database[0]]                database = time_database[1].strip()  # [b_tuple.strip() for b_tuple in time_database[1]]                a_recording.append(atr_time)                a_recording.append(database)                a_recording.append(down)                a_recording.append(ref)            print(a_recording)            print()            store_into_csv(a_recording)        print(&quot;store into csv_file&quot;)</code></pre><h3 id="存储模块"><a href="#存储模块" class="headerlink" title="存储模块"></a>存储模块</h3><p>有的人可能看了上面,就会疑问哪里来的store_into_csv的方法</p><p>这不看着名字就应该知道是存储模块了</p><pre><code># 使得每个文献的数据起码能包含在一个列表中存储到csvdef store_into_csv(a_recording):    with open(r&#39;C:\Users\oslijw\Desktop\cnki_spider1.csv&#39;, &#39;a&#39;, newline=&#39;&#39;, encoding=&#39;utf-8-sig&#39;) as out:        csv_write = csv.writer(out, dialect=&#39;excel&#39;)        csv_write.writerow(a_recording)</code></pre><h3 id="提取详情页的一些信息"><a href="#提取详情页的一些信息" class="headerlink" title="提取详情页的一些信息"></a>提取详情页的一些信息</h3><pre><code># 获得详情页的标题,关键词,摘要def get_title_key_word_summary(text):    tree = etree.HTML(text)    return_value = []    key_word = tree.xpath(&quot;//label[@id=&#39;catalog_KEYWORD&#39;]/../a/text()&quot;)    key_word = &quot;&quot;.join([aword.strip() for aword in key_word])    if len(tree.xpath(&quot;//h2[@class=&#39;title&#39;]/text()&quot;))!=0:        return_value.append(tree.xpath(&quot;//h2[@class=&#39;title&#39;]/text()&quot;)[0])    else:        return_value.append(&#39;-&#39;)    return_value.append(key_word)    if len(tree.xpath(&quot;//span[@id=&#39;ChDivSummary&#39;]/text()&quot;))!=0:        return_value.append(tree.xpath(&quot;//span[@id=&#39;ChDivSummary&#39;]/text()&quot;)[0])    else:        return_value.append(&#39;-&#39;)    return return_value</code></pre><h3 id="爬取摘要"><a href="#爬取摘要" class="headerlink" title="爬取摘要"></a>爬取摘要</h3><p>在详情页上面呢,摘要是不全的</p><p>所以需要爬取详情页</p><pre><code># 爬取详情页中的一些信息def paser_detail(url):    uapools = [        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0&quot;,        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36&quot;,        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134&quot;,    ]    page_ua = random.choice(uapools)    headers = {        &quot;User_Agent&quot;: page_ua,    }    try:        response = requests.get(url, headers=headers, timeout=3)        response.raise_for_status()        response.encoding = &#39;utf8&#39;  # response.apparent_encoding    except Exception as err:        print(&quot;出现了异常情况,异常情况是 : &quot; + str(err))        time.sleep(3 * random.random())    return response.text</code></pre><h1 id="主方法"><a href="#主方法" class="headerlink" title="主方法"></a>主方法</h1><p>最后根据习惯写一个主方法就可以了</p><h3 id="最重要的一点"><a href="#最重要的一点" class="headerlink" title="最重要的一点"></a>最重要的一点</h3><p>知网有一些反爬手段</p><p>需要传入cookies才可以</p><pre><code>cookies_list = [    ]    # 这边的cookies 需要是详情页的cookies,会过期</code></pre><h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><pre><code>#!/usr/bin/python# -*- coding: utf-8 -*-# author : oslijwimport requestsimport refrom bs4 import BeautifulSoup as bsimport timeimport randomimport csvimport lxmlfrom lxml import etree# cookies列表需要替换cookies_list = [    # 需要换掉知网的反爬这边只有涉及cookies    ]# 获得网页源码def get_page_thing(url):    uapools = [        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0&quot;,        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36&quot;,        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134&quot;,    ]    page_ua = random.choice(uapools)    page_cookies = random.choice(cookies_list)    headers = {        &quot;User_Agent&quot;: page_ua,        &quot;Cookie&quot;: page_cookies,    }    try:        response = requests.get(url,headers = headers,timeout = 3)        response.raise_for_status()        response.encoding = &#39;utf8&#39;# response.apparent_encoding    except Exception as err:        print(&quot;出现了异常情况,异常情况是 : &quot; + str(err))        time.sleep(3*random.random())    return response.text# 使用xpath进行提取并且保存def paser_html(response_text):        tree = etree.HTML(response_text)        for i in range(2, 52, 1):            a_recording = []            detail_url = tree.xpath(&quot;//tr[&quot; + str(i) + &quot;]//a[@class=&#39;fz14&#39;]/@href&quot;)            fn = re.compile(&quot;FileName=(.*?)&amp;&quot;).findall(detail_url[0])            dn = re.compile(&quot;DbName=(.*?)&amp;&quot;).findall(detail_url[0])            dc = re.compile(&quot;DbCode=(.*?)&amp;&quot;).findall(detail_url[0])            detail_url = &quot;https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode={}&amp;dbname={}&amp;filename={}&quot;.format(dc[0],                                                                                                               dn[0],                                                                                                               fn[0])            # 构造出具体链接的url由于概括页部分信息缺失        a_recording.append(detail_url)            store_url(detail_url)            title_keyword_summary = get_title_key_word_summary(paser_detail(detail_url))            a_recording = a_recording + title_keyword_summary            for j in range(3, 5, 1):                title_author_unit = tree.xpath(                    &#39;//table[@class=&quot;GridTableContent&quot;]//tr[&#39; + str(i) + &#39;]/td[&#39; + str(j) + &#39;]/a/text()&#39;)                if len(title_author_unit) == 1:                    a = &quot;&quot;.join(title_author_unit)                else:                    a = &quot;;&quot;.join(title_author_unit)                a_recording.append(a)            if True:                time_database = tree.xpath(                    &quot;//table[@class=&#39;GridTableContent&#39;]//tr[&quot; + str(i) + &quot;]/td[@align=&#39;center&#39;]/text()&quot;)                reference = tree.xpath(&quot;//table//tr[&quot; + str(i) + &quot;]/td[7]/span[@class=&#39;KnowledgeNetcont&#39;]//text()&quot;)                download = tree.xpath(&quot;//table//tr[&quot; + str(i) + &quot;]/td[8]/span[@class=&#39;downloadCount&#39;]//text()&quot;)                if len(reference)!=0:                    ref = reference[0].strip()                else:                    ref = &#39;-&#39;                if len(download) != 0:                    down = download[0].strip()                else:                    down = &#39;-&#39;                atr_time = time_database[0].strip()  # [a_tuple.strip() for a_tuple in time_database[0]]                database = time_database[1].strip()  # [b_tuple.strip() for b_tuple in time_database[1]]                a_recording.append(atr_time)                a_recording.append(database)                a_recording.append(down)                a_recording.append(ref)            print(a_recording)            print()            store_into_csv(a_recording)        print(&quot;store into csv_file&quot;)# 爬取详情页中的一些信息def paser_detail(url):    uapools = [        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0&quot;,        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36&quot;,        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134&quot;,    ]    page_ua = random.choice(uapools)    headers = {        &quot;User_Agent&quot;: page_ua,    }    try:        response = requests.get(url, headers=headers, timeout=3)        response.raise_for_status()        response.encoding = &#39;utf8&#39;  # response.apparent_encoding    except Exception as err:        print(&quot;出现了异常情况,异常情况是 : &quot; + str(err))        time.sleep(3 * random.random())    return response.text# 获得详情页的标题,关键词,摘要def get_title_key_word_summary(text):    tree = etree.HTML(text)    return_value = []    key_word = tree.xpath(&quot;//label[@id=&#39;catalog_KEYWORD&#39;]/../a/text()&quot;)    key_word = &quot;&quot;.join([aword.strip() for aword in key_word])    if len(tree.xpath(&quot;//h2[@class=&#39;title&#39;]/text()&quot;))!=0:        return_value.append(tree.xpath(&quot;//h2[@class=&#39;title&#39;]/text()&quot;)[0])    else:        return_value.append(&#39;-&#39;)    return_value.append(key_word)    if len(tree.xpath(&quot;//span[@id=&#39;ChDivSummary&#39;]/text()&quot;))!=0:        return_value.append(tree.xpath(&quot;//span[@id=&#39;ChDivSummary&#39;]/text()&quot;)[0])    else:        return_value.append(&#39;-&#39;)    return return_value# 把url存储到本地def store_url(url):    with open(r&#39;detail_url.text&#39;,&#39;a&#39;) as file:        file.write(url+&quot;\n&quot;)# 使得每个文献的数据起码能包含在一个列表中存储到csvdef store_into_csv(a_recording):    with open(r&#39;C:\Users\oslijw\Desktop\cnki_spider1.csv&#39;, &#39;a&#39;, newline=&#39;&#39;, encoding=&#39;utf-8-sig&#39;) as out:        csv_write = csv.writer(out, dialect=&#39;excel&#39;)        csv_write.writerow(a_recording)# 主方法的入口,传入数来爬取相应的详情页def main(count):    if count == 1:        url = # 自己抓包 把接口抓到    else:        url = # 根据接口的url构造逻辑来实现翻页    print(&quot;----------------------------------------------------&quot;)    print(url)    print(&quot;----------------------------------------------------&quot;)    response = get_page_thing(url)    paser_html(response)if __name__ == &#39;__main__&#39;:    for count in range(1,120,1):# 1-121        print(&quot;crawl page&quot; + str(count))        main(count)</code></pre>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 爬虫 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>R-for-data-science</title>
-      <link href="/2020/01/24/r-for-data-science/"/>
-      <url>/2020/01/24/r-for-data-science/</url>
-      
-        <content type="html"><![CDATA[<h2 id="数据科学是什么"><a href="#数据科学是什么" class="headerlink" title="数据科学是什么"></a>数据科学是什么</h2><p>数据科学是一个人们从生数据(raw data)中理解,明确以及获得知识的有趣学科</p><p>数据科学是一个很大的领域,没有任何途径能让人简单的从一本书中了解到全部内容.</p><h2 id="数据分析的有力工具–R"><a href="#数据分析的有力工具–R" class="headerlink" title="数据分析的有力工具–R"></a>数据分析的有力工具–R</h2><p>在使用R进行数据分析的时候是分阶段,分步骤进行的</p><p><img src="https://i.loli.net/2020/01/24/Gs4Fj9KxgOervPX.png" alt=""></p><h4 id="数据来源-import"><a href="#数据来源-import" class="headerlink" title="数据来源(import)"></a>数据来源(import)</h4><p>首先需要把自己的数据导入(import)到R中,一般而言,数据存储在文件,数据库或者web API(web接口),我们需要把数据以数据框(data frame)的形式导入到R中,如果无法把数据导入到R中,那何谈数据科学呢?</p><h4 id="规整数据-tidy"><a href="#规整数据-tidy" class="headerlink" title="规整数据(tidy)"></a>规整数据(tidy)</h4><p>当我们导入数据后,而数据在收集过程中有着这样那样的问题,所以需要规整数据让数据以统一的格式存在,有利于自己对数据进行进一步的加工  比如:让每一列都是同一种变量类型,每一行都是一个观测值(observation)</p><h4 id="TVM-transform-visualize-model"><a href="#TVM-transform-visualize-model" class="headerlink" title="TVM(transform-visualize-model)"></a>TVM(transform-visualize-model)</h4><p>当规整数据后第一步通常是转化数据,而这一步包括了规范化数据(类似于数仓里面的z-score规划化,最大最小规范化,小数定标规范化等有利于提高分析的精度),基于存在的变量创建新的变量(比如通过时间和路程这两个变量,我们可以得到平均速度这个额外的变量),计算某一个统计量(计算一个集合的求和等),值得注意的是tidy和transform这两个有时会统称为wrangling(对数据进行规整处理的意思,是一个比较难直译的词=&gt;争论)<br>当有了规整后的数据和自己需要的变量后,接下来就有两个主要的知识认识的迭代过程:可视化(visualization)和建模(modeling)二者之间是互补的关系,所有的数据都需要在这二者之间迭代很多次<br>可视化是一个很基础的行为,一个好的可视化有助于自己查看自己的数据而不是依靠直觉去猜,当然可视化也有很多好处而建模则是与其互补,可以用于预测等</p><h4 id="交流-communication"><a href="#交流-communication" class="headerlink" title="交流(communication)"></a>交流(communication)</h4><p>最后一步就是数据科学的交流了.除非能够很好的和别人交流自己分析的结果,不然自己的建模和可视化可能就是有问题的就需要改进或者重新思考</p><p>编程不是必须的,重点是在理解整个过程,但是如果会编程会有助于自己使用高效的工具进行数据分析</p><p>可以在每个数据科学工程中使用这些工具,但是可能还不够,有的时候还需要使用别的一些工具.</p><p>处理大量(10-100GB)的数据时可能需要用到data.table</p><h2 id="事前准备"><a href="#事前准备" class="headerlink" title="事前准备"></a>事前准备</h2><h3 id="R"><a href="#R" class="headerlink" title="R"></a>R</h3><h3 id="RStudio-开发环境-IDE"><a href="#RStudio-开发环境-IDE" class="headerlink" title="RStudio (开发环境,IDE)"></a>RStudio (开发环境,IDE)</h3><p>RStudio是常用的R语言开发工具,当然也可以用vscode等进行开发,看个人看法</p><h3 id="一些必要的库-包"><a href="#一些必要的库-包" class="headerlink" title="一些必要的库(包)"></a>一些必要的库(包)</h3><p>库是方法,数据,拓展文档的集合.正确使用库是成功使用R的关键</p><p>Tidyverse==&gt;a common philosophy of data<br>使用<br><code>install.packages(&#39;library_name&#39;)</code><br>来安装库</p><p>当然在安装后并不是随时准备被使用的我们需要使用library()来导入也就是import</p><p><img src="https://s2.ax1x.com/2020/01/24/1ZIGAe.png" alt=""></p><p>由此可见,在加载这库的时候会同时加载ggplot2,tibble,tidyr,readr,purrr,等库,同时这些库也是tidyverse的核心,我们在很多分析场合使用它们(具体的使用接下来会有所解释)<br>这里面的一些库的高性是很经常的,我们可以看到哪些更新是可用的,同时可用有选择的进行安装(使用tidyverse_update()方法)</p><p>上面可以知道很多库包含在tidyverse里面<br>可是还是有一部分常用库不是tidyverse的一部分,所以需要额外的安装</p><pre><code>    Install.packages(c(&#39;nycflight13&#39;,            &#39;gapminder&#39;,            &#39;Lahman&#39;))</code></pre><p>c是一个向量的表示 这个可以批量的进行安装</p><p>这些包提供了航班数据,世界的发展数据,和棒球数据</p><h2 id="冲R"><a href="#冲R" class="headerlink" title="冲R!"></a>冲R!</h2>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>拉勾网爬虫</title>
-      <link href="/2020/01/16/la-gou-wang-pa-chong/"/>
-      <url>/2020/01/16/la-gou-wang-pa-chong/</url>
-      
-        <content type="html"><![CDATA[<h2 id="需求-爬取拉勾网某一特定职业对应的招聘岗位"><a href="#需求-爬取拉勾网某一特定职业对应的招聘岗位" class="headerlink" title="需求: 爬取拉勾网某一特定职业对应的招聘岗位"></a>需求: 爬取拉勾网某一特定职业对应的招聘岗位</h2><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>比如我现在需要爬取拉勾网上关于爬虫的岗位</p><p>首先当然是点击<a href="https://www.lagou.com/" target="_blank" rel="noopener">拉勾网</a></p><p>然后在搜索栏搜索<strong>爬虫</strong>二字</p><p>然后跳转到<br><img src="https://i.loli.net/2020/01/16/anF3N1suDAVXQqv.png" alt="">这个页面</p><p>ctrl+u看一下 果然没有岗位信息 然后试着抓包一下</p><p>发现招聘数据在是json格式的<br><img src="https://i.loli.net/2020/01/16/D7t2TkWZwALOR16.png" alt=""></p><p>还是post请求的啊那第一步想到的肯定是requests.post方法把data一起提交</p><p>但是事情没那么简单 这样的方法会有这样的结果<br><img src="https://i.loli.net/2020/01/16/LHZNmlos1YVJcOe.png" alt=""></p><p>害 这下可咋整</p><p>然后我就搜了一下</p><p>原来要用session对象来弄</p><p>行吧那就用吧,然后果然<br><img src="https://i.loli.net/2020/01/16/AoTBIM7QkGze5jS.png" alt=""><br>成了!!!</p><p>然后接下来就是解析一下然后放到csv文件里面或者数据库里面了</p><h2 id="session"><a href="#session" class="headerlink" title="session"></a>session</h2><p>上面提到了session<br>那么session是什么呢??</p><h3 id="关于session"><a href="#关于session" class="headerlink" title="关于session"></a>关于session</h3><p>session是会话对象</p><p>会话对象让你能够跨请求保持某些参数。</p><p>它也会在同一个 Session 实例发出的所有请求之间保持 cookie</p><p>所以如果你向同一主机发送多个请求，底层的 TCP 连接将会被重用，从而带来显著的性能提升。</p><h3 id="为什么用到session"><a href="#为什么用到session" class="headerlink" title="为什么用到session"></a>为什么用到session</h3><p>可能…我上面忘记加cookie了?</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>说了这么多也没用</p><p>还不如把自己的”内裤”(代码)交出来</p><pre><code># -*- coding: utf-8 -*-# coder: oslijw# blog : https://oslijw.github.io/import requestsif __name__ == &#39;__main__&#39;:    data = {        &#39;first&#39;: &#39;true&#39;,        &#39;pn&#39;: &quot;1&quot;,        &#39;kd&#39;: &#39;爬虫&#39;,    }    my_headers = {        &#39;User-Agent&#39;: &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36&#39;,        &#39;Origin&#39;: &#39;www.lagou.com&#39;,        &#39;Referer&#39;: &#39;https://www.lagou.com/jobs/list_%E7%88%AC%E8%99%AB?labelWords=&amp;fromSearch=true&amp;suginput=&#39;,        &#39;X-Anit-Forge-Code&#39;: &#39;0&#39;,        &#39;X-Anit-Forge-Token&#39;: &#39;None&#39;,        &#39;X-Requested-With&#39;: &#39;XMLHttpRequest&#39;    }    session = requests.session()    session.get(&#39;https://www.lagou.com/jobs/list_%E7%88%AC%E8%99%AB?labelWords=&amp;fromSearch=true&amp;suginput=&#39;, headers=my_headers)    res = session.post(&#39;https://www.lagou.com/jobs/positionAjax.json?needAddtionalResult=false&#39;, headers=my_headers, data=data)    print(res.json())</code></pre><h2 id="接下来就是存储了"><a href="#接下来就是存储了" class="headerlink" title="接下来就是存储了"></a>接下来就是存储了</h2><p>解析一下json格式的数据</p><p>按自己需要存到csv或者数据库里面就可以了</p><p>然后就可以”快乐”的数据分析了</p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 爬虫 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>循环移动若干元素</title>
-      <link href="/2020/01/06/xun-huan-zuo-yi-ruo-gan-yuan-su/"/>
-      <url>/2020/01/06/xun-huan-zuo-yi-ruo-gan-yuan-su/</url>
-      
-        <content type="html"><![CDATA[<h2 id="问题的提出"><a href="#问题的提出" class="headerlink" title="问题的提出"></a>问题的提出</h2><p>给定一个数组,要求把前n位的元素移动到最后面,这n个顺序不变</p><p>然后后面的其他元素全部向前移动,顺序也保持</p><p>大概就是</p><p>[a,b,c,d,e]==循环左移动2位==&gt;[c,d,e,a,b]</p><p>要求以最好的效率进行</p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>算法分析从两个方面入手</p><p>时间效率(时间复杂度)和空间效率(空间复杂度)</p><p>在算法设计的时候往往会更加注意时间复杂度</p><p>一般时候两者是没办法同时达到最大的</p><p>有的人可能会想把前n个取出来<br>然后把后面元素前移就好了</p><p>但是这样的效率真的高嘛?</p><p>试想把前面n个翻转一下 把后面的元素在翻转一下<br>然后把整体数组在翻转一下</p><p>m个元素 迁移n位<br>这样时间效率就是O(m)<br>空间效率就是O(1)<br>:)如果不会分析的话 可以私聊我或者评论一下<br>我找时间写一个简单的分析</p><p>虽然上面的想法的时间复杂度看起来好像也是O(m)<br>但是空间复杂度可就是o(n)了</p><p>可见二者的效率差距之大</p><h2 id="代码的编写"><a href="#代码的编写" class="headerlink" title="代码的编写"></a>代码的编写</h2><p>上面的算法逻辑是比较清晰的</p><p>就是声明一个临时变量 然后进行翻转就可以了</p><p>翻转三次就可以了</p><p>所以这里可能就需要把翻转的代码翻转成一个方法</p><h3 id="翻转方法"><a href="#翻转方法" class="headerlink" title="翻转方法"></a>翻转方法</h3><pre><code>  private static void similarSameCode(int low,int high){        int somePlace = 0;        char temporaryStorage;//临时变量存储        for (int i = low;i &lt; high;i++){        //这边就是简单的交换值            temporaryStorage = chain[i];            chain[i] = chain[high - 1 - somePlace];            chain[high - 1 - somePlace] = temporaryStorage;            somePlace ++;            if (somePlace == (high -1 -low) /2 + 1){                break;            }        }</code></pre><h3 id="翻转三次"><a href="#翻转三次" class="headerlink" title="翻转三次"></a>翻转三次</h3><p>一次翻转搞好了</p><p>接下来只需要在主方法里面进行三次就可以了</p><pre><code>/*原来代码里面是按习惯声明了一个翻转数组类  然后我也懒得调了  就将就着看吧  */  public class Demo2_1 {    //测试类    public static void main(String[] args) {        //产生随机整数,以逆转        ReverseChain a = new ReverseChain();        System.out.println(&quot;原来数组的亚子: &quot; + a.getChain());        System.out.print(&quot;循环左移后: &quot;);        System.out.println(a);        int len = a.getChainLength();        int i = (int)(Math.random() * len);        System.out.println(&quot;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*&quot;);        System.out.println(&quot;循环左移&quot; + i + &quot;位&quot;);        ReverseChain b = new ReverseChain(i);        System.out.println(&quot;原来数组的亚子和上面一样,就是可能左移位数有随机数生成会有区别&quot;);        System.out.println(b);    }}class ReverseChain{    //逆转链类    private char[]chain = {&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;f&#39;,&#39;g&#39;,&#39;h&#39;,&#39;i&#39;,&#39;j&#39;,&#39;k&#39;,&#39;l&#39;,&#39;m&#39;,&#39;n&#39;,&#39;o&#39;,&#39;p&#39;,&#39;q&#39;};    private int position;//循环左移的位数    public ReverseChain(){        //默认循环左移5位        this(5);    }    public ReverseChain(int posion){        this.position = posion;        headle(position);    }    public int getChainLength(){        return chain.length;    }    public String getChain() {        char[]chain = {&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;f&#39;,&#39;g&#39;,&#39;h&#39;,&#39;i&#39;,&#39;j&#39;,&#39;k&#39;,&#39;l&#39;,&#39;m&#39;,&#39;n&#39;,&#39;o&#39;,&#39;p&#39;,&#39;q&#39;};        int i = 0;        StringBuffer sb2 = new StringBuffer(&quot;&quot;);        for (char a: chain){            if (i == 0) {                i++;                sb2.append(a);            }            else {                sb2.append(&quot; - &quot; + a);            }        }        String str = sb2.toString();        return str;    }    private void headle(int position){        //用翻转定律        similarSameCode(0,position);        similarSameCode(position,chain.length);        similarSameCode(0,chain.length);    }    private static void similarSameCode(int low,int high){        int somePlace = 0;        char temporaryStorage;//临时变量存储        for (int i = low;i &lt; high;i++){        //这边就是简单的交换值            temporaryStorage = chain[i];            chain[i] = chain[high - 1 - somePlace];            chain[high - 1 - somePlace] = temporaryStorage;            somePlace ++;            if (somePlace == (high -1 -low) /2 + 1){                break;            }        }    public String toString(){        //打印        boolean i = true;        StringBuffer sb = new StringBuffer();        for (char a: chain){            if (i) {                i = !i;                sb.append(a);            }            else {                sb.append(&quot; - &quot; + a);            }        }        String str = sb.toString();        return str;    }}</code></pre>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>翻转链表</title>
-      <link href="/2019/12/26/fan-zhuan-lian-biao/"/>
-      <url>/2019/12/26/fan-zhuan-lian-biao/</url>
-      
-        <content type="html"><![CDATA[<h2 id="链表的翻转"><a href="#链表的翻转" class="headerlink" title="链表的翻转"></a>链表的翻转</h2><p>对于链表如何执行翻转操作是数据结构的一个很基本的操作必须会的操作</p><h3 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h3><p>准备好链表 line</p><p>假设链表带头指针head</p><h3 id="翻转操作解析"><a href="#翻转操作解析" class="headerlink" title="翻转操作解析"></a>翻转操作解析</h3><p>使用三个指针来记住位置</p><p>font p last 三个工作指针 等下说明为什么要用三个指针</p><p>首先需要把font赋值head.next节点</p><pre><code>font = head.next</code></pre><p>思路是先把p的next指向font 由于last可以辅助记住p.next的地址</p><p>所以不需要担心p后面由于next域变换而丢失</p><p>这样子就逆转了一个连接</p><p>接下来就开始遍历就可以了</p><p>最后需要思考一下,循环在什么时候停止</p><p>是p==null还是last==null呢</p><p>答案自然是p==null</p><p>理由是last是记住p的后继节点是作用,而p是真正的工作指针,而font是辅助记住p的前面节点位置</p><p>所以当p==null为true的时候自然就说明要停止</p><p>然后就把head.next赋值给font就可以了</p><h3 id="具体方法代码"><a href="#具体方法代码" class="headerlink" title="具体方法代码"></a>具体方法代码</h3><pre><code> public void reverse(){        //起始是第一个节点        Node font = head.next;        //处理中心节点        Node p;        Node last;        for (p=font.next;p!=null;p=last){            //从第二个节点开始操作            if (font == head.next){                //把第一个节点设置为null                //如果不设置成null最后在遍历的时候会出现问题        //就会变成类似自己遍历自己的样子                font.next =null;            }            //事先把p.next赋给指针last            last = p.next;            //把p节点的指针域指向上一个节点            p.next = font;            //把指针下移            font = p;            //三个指针下移        }        //头指针指向最后一个节点        head.next = font;    }</code></pre><h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>感觉这个有点没说清楚 没办法表达好自己的思想</p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>自定义stack遇到的坑</title>
-      <link href="/2019/12/14/zi-ding-yi-stack-yu-dao-de-keng/"/>
-      <url>/2019/12/14/zi-ding-yi-stack-yu-dao-de-keng/</url>
-      
-        <content type="html"><![CDATA[<h2 id="什么是栈呢"><a href="#什么是栈呢" class="headerlink" title="什么是栈呢"></a>什么是栈呢</h2><p>栈是一个比较常见而且比较常用的数据结构</p><p>很多语言中也有封装好的栈</p><p>但是呢<br>学习嘛,难免要自己来定义一个栈,来深入的体会学习栈的FILO的特性</p><h2 id="构建栈的时候遇到的困难"><a href="#构建栈的时候遇到的困难" class="headerlink" title="构建栈的时候遇到的困难"></a>构建栈的时候遇到的困难</h2><p><strong>基于java</strong></p><p>我在构建栈的时候,想利用泛型来建立<br>(麻烦恰恰是由于泛型的一些特性)</p><p>在泛型中,如果要在类中利用泛型参数来创建对象,是不能直接用new的</p><p>那么这时候就会有人提问,那我又是怎么创建的呢??</p><p>这时候就要用到java的一个特性–反射</p><p>至于反射,由于近来期末考将近,我能有时间来写这个博客已经实属不易了<br>所以,等我寒假看看书总结一下,反射,这一java特性吧</p><h2 id="解决代码"><a href="#解决代码" class="headerlink" title="解决代码"></a>解决代码</h2><pre><code>stacks =(T[]) Array.newInstance(Object.class,len);// 利用反射,先反射成一个class对象,然后再强制类型转换会T就可以了// 基于一个数组来建立线性栈,当然也可以建立链式栈</code></pre><p>在使用前,当然不能直接用,需要先import相关的包</p><pre><code>import java.lang.reflect.Array;</code></pre><p>从import的包也可以看出来是利用反射特性</p><h2 id="栈的完整代码"><a href="#栈的完整代码" class="headerlink" title="栈的完整代码"></a>栈的完整代码</h2><p>下面是构建整个栈的代码</p><pre><code>import java.lang.reflect.Array;class stack&lt;T&gt;{    //数组类型的栈    private T[]stacks;    //栈顶的指针,主要用于isempty的判断    private int pointer;    //这些东西不能让外界随便访问,所以就把访问权限设为private    public stack(){        //默认创建一个长度是64的栈        this(64);    }    public stack(int len){        //初始化栈        //长度为len的T类型数组        stacks =(T[]) Array.newInstance(Object.class,len);        //刚刚开始栈里面没有任何的元素所以栈的指针是-1        pointer = -1;    }    public boolean isEmpty(){        //使用三元运算符        return pointer==-1?true:false;    }    public void push(T info){        //入栈操作        pointer ++;        stacks[pointer] = info;    }    public T peek(){        //查看栈顶元素        if (pointer == -1){            return null;        }        return stacks[pointer];    }    public T pop(){        //出栈        T out = stacks[pointer];        pointer --;        return out;    }}</code></pre>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>如何建立一个评论系统利用gittalk</title>
-      <link href="/2019/12/09/ru-he-jian-li-yi-ge-ping-lun-xi-tong-li-yong-gitalk/"/>
-      <url>/2019/12/09/ru-he-jian-li-yi-ge-ping-lun-xi-tong-li-yong-gitalk/</url>
-      
-        <content type="html"><![CDATA[<h1 id="基于gitalk建立博客评论功能"><a href="#基于gitalk建立博客评论功能" class="headerlink" title="基于gitalk建立博客评论功能"></a>基于gitalk建立博客评论功能</h1><p>博客建好了,万一有人想问一些操作呢?</p><p>有的人可能说可以通过放在博客上的qq什么的联系到</p><p>但是,自己搭一个功能,不香嘛??<br><img src="https://i.loli.net/2019/12/09/MXjEzgYdpciVG5f.png" alt=""></p><p>那就记录一下怎么搭建评论功能吧</p><p>别用gitment 好像有点问题<br>和我一样用gitalk就好了</p><p>先去申请一个<a href="https://github.com/settings/applications/new" target="_blank" rel="noopener">OAuth</a>吧</p><p>具体的这样填<br><img src="https://i.loli.net/2019/12/09/LSTwrzC39ofdnFY.png" alt=""></p><p>等register好了之后,记住clientId 和clientSecret 等下有用到</p><p>然后打开主题的_config.yml 找到gitalk</p><p>把配置改成</p><pre><code>gitalk:  enable: true  owner: *** # 自己的github昵称  repo: *** # 别听别人瞎说 这边就是仓库名字 不要什么http什么的  oauth:    clientId: *** # 这边就是刚刚复制的    clientSecret: *** # 同理  admin: &#39;xxx&#39; # 这边我也不知道 好像可以随便弄</code></pre><p>然后就在命令行打</p><pre><code>hexo clean&amp;&amp;hexo g&amp;&amp;hexo d</code></pre><p>然后就可以看到gitalk的加载</p><p>但是要登陆一下自己的github才能开启</p><p>登陆完就会变成</p><p><img src="https://i.loli.net/2019/12/09/KfOYprHJP4eEhT6.png" alt=""></p><p>然后就可以开始用了</p><p>这个功能是基于github的issue功能的</p><p>还有 PicGo真好用</p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> gitalk </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>图床推荐以及PicGo的好</title>
-      <link href="/2019/12/07/tu-chuang-tui-jian-yi-ji-picgo-de-hao/"/>
-      <url>/2019/12/07/tu-chuang-tui-jian-yi-ji-picgo-de-hao/</url>
-      
-        <content type="html"><![CDATA[<h2 id="图床的用处"><a href="#图床的用处" class="headerlink" title="图床的用处"></a>图床的用处</h2><p>在发布博客的时候,由于某些特性,我们需要有一个图床来获取图片的地址</p><p>但是呢,我们不能每次要的时候才去找图片,然后复制图片地址吧</p><p>而且最重要的一点是在国内大部分网站都是不让外链的,所以这时候就需要一个外链了</p><h2 id="图床推荐"><a href="#图床推荐" class="headerlink" title="图床推荐"></a>图床推荐</h2><p>下面进入正题</p><p>也许会有很多人和我一样,被贫困所压迫着,哈哈哈哈哈,很真实的大学生现象</p><p>所以这时候就需要有一些免费的图床来用用</p><p>比如:<br>    <a href="https://sm.ms/" target="_blank" rel="noopener">sm.ms</a><br>    <a href="https://postimages.org/" target="_blank" rel="noopener">postimages</a><br>    <a href="https://imgse.com/" target="_blank" rel="noopener">路过图床</a></p><p>当然免费的也有很多,七牛云什么的</p><p>以七牛云为例,大概有10G是免费的,并且提供一段时间的测试域名,但是后期就需要有一个域名来替换临时的测试域名</p><p>也可以用github等途径</p><p>但是免费又不用注册的不香嘛??</p><h2 id="PicGo"><a href="#PicGo" class="headerlink" title="PicGo"></a>PicGo</h2><p>PicGo是一个很好的工具,这样我们以后上传图片的时候就不需要去人家网站上传了</p><p>而且PicGo是一个很好用的工具,所以极力推荐啊!!</p><p><a href="https://github.com/Molunerfinn/picgo/releases" target="_blank" rel="noopener">PicGo下载地址</a></p><p>然后在Assets里面找到对应的安装包下载就好了</p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 图床推荐 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>markdown的基本操作</title>
-      <link href="/2019/12/06/markdown-de-ji-ben-cao-zuo/"/>
-      <url>/2019/12/06/markdown-de-ji-ben-cao-zuo/</url>
-      
-        <content type="html"><![CDATA[<blockquote><p>在使用Markdown之前，你可能需要先了解一下关于markdown的简单语法。</p></blockquote><h3 id="1-标题"><a href="#1-标题" class="headerlink" title="1.标题"></a>1.标题</h3><ul><li>使用 <code>#</code> 表示标题，一级标题使用一个 <code>#</code> ，二级标题使用两个 <code>##</code> ，以此类推，共有六级标题。</li><li>使用 <code>=====</code> 表示高阶标题，使用 <code>---------</code> 表示次阶标题。</li></ul><ol><li><code>#</code> 和标题之间记得有个空格哦。</li><li><code>====</code> 和 <code>----</code> 表示标题时，大于等于2个都可以表示。</li></ol><h3 id="2-引用"><a href="#2-引用" class="headerlink" title="2.引用"></a>2.引用</h3><p>使用 <code>&gt;</code> 表示引用， <code>&gt;&gt;</code> 表示引用里面再套一层引用，依次类推。</p><ol><li>如果 <code>&gt;</code> 和 <code>&gt;&gt;</code> 嵌套使用的话，从 <code>&gt;&gt;</code> 退到 <code>&gt;</code> 时，必须之间要加一个空格或者 <code>&gt;</code> 作为过渡，否则默认为下一行和上一行是同一级别的引用。如示例所示。</li><li>引用标记里可以使用其他标记，如：有序列表或无序列表标记，代码标记等。</li></ol><p>示例</p><blockquote><p>这是一级引用</p><blockquote><p>这是二级引用</p><blockquote><p>这是三级引用</p></blockquote></blockquote></blockquote><blockquote><p>这是一级引用</p></blockquote><h3 id="3-代码块"><a href="#3-代码块" class="headerlink" title="3 代码块"></a>3 代码块</h3><p>使用3个连续的` 符号包围起来表示代码块。</p><ol><li>本文档所有使用讲解Markdown语法标记示例的地方都是使用代码块标记的。</li><li>代码块前后都得有换行哦</li></ol><p>示例</p><pre><code>[在这输入链接标题]()$(document).ready(function() {$(&#39;pre code&#39;).each(function(i, block) {hljs.highlightBlock(block);});});</code></pre><h3 id="4-行内代码"><a href="#4-行内代码" class="headerlink" title="4 行内代码"></a>4 行内代码</h3><p>使用``表示行内代码。本页部分文字中间的英文字母就是使用行内代码标记标记的。</p><p>示例</p><p>这是 <code>javascript</code> 代码</p><h4 id="5-链接"><a href="#5-链接" class="headerlink" title="5 链接"></a>5 链接</h4><p>使用 <code>[](link)</code> 表示行内链接。其中：</p><ul><li><code>[]</code> 内的内容为要添加链接的文字。</li><li><code>link</code> 为链接地址。</li></ul><p>示例</p><p>我觉得<a href="https://appsto.re/cn/jK8Cbb.i" target="_blank" rel="noopener">Markdown</a>真是个棒棒哒的编辑器😊.</p><h3 id="6-数学公式"><a href="#6-数学公式" class="headerlink" title="6 数学公式"></a>6 数学公式</h3><p><code>$</code>包围的区块将会解析为数学公式，连续的<code>$$</code>将独占一行并居中显示</p><p>示例</p><p>当 $a \ne 0$, 此方程式有两个解 $ax^2 + bx + c = 0$，他们是</p><p>$$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$</p><h3 id="7-导入图片"><a href="#7-导入图片" class="headerlink" title="7 导入图片"></a>7 导入图片</h3><p>使用 <code>![Alt text](/path/to/img.jpg)</code> 导入图片。其中：</p><ul><li><code>Alt text</code> 为如果图片无法显示时显示的文字；</li><li><code>/path/to/img.jpg</code> 为图片所在路径；</li></ul><p>点击辅助键盘中的添加图片按钮可快捷添加图片</p><ol><li>==本地引用==是图片直接存储到本地通过相对路径引用，无需网络连接</li><li>==上传图片==将把图片上传至图床，这样在文档或图片移动时认可访问图片</li></ol><p>示例</p><p><img src="https://i.loli.net/2019/11/16/h4lWxQbjvUwN7XZ.jpg" alt="Markdown"></p><h3 id="8-Todo-List"><a href="#8-Todo-List" class="headerlink" title="8 Todo List"></a>8 Todo List</h3><p>小写x表示已完成， 空格表示未完成</p><ul><li><input checked="" disabled="" type="checkbox"> 支持数学公式</li><li><input checked="" disabled="" type="checkbox"> 支持TodoList</li><li><input checked="" disabled="" type="checkbox"> 支持自定义样式</li><li><input disabled="" type="checkbox"> 支持自定义图床</li></ul><h3 id="9-粗体，斜体，高亮和删除线"><a href="#9-粗体，斜体，高亮和删除线" class="headerlink" title="9 粗体，斜体，高亮和删除线"></a>9 粗体，斜体，高亮和删除线</h3><ol><li>使用 <code>**</code> 或者 <code>__</code> 表示<strong>粗体</strong>。</li><li>使用 <code>*</code> 或者 <code>_</code> 表示<em>斜体</em>。</li><li>使用<code>==</code>表示==高亮==</li><li>使用<code>~~</code>表示<del>删除</del></li><li><code>*</code>，<code>=</code> 或 <code>_</code> 的后面<strong>不要跟空格哦</strong></li></ol><h3 id="10-列表"><a href="#10-列表" class="headerlink" title="10 列表"></a>10 列表</h3><p>使用 <code>1. 2. 3.</code> 表示有序列表，使用 <code>*</code> 或 <code>-</code> 或 <code>+</code> 表示无序列表。</p><ol><li>无序列表或有序列表标记和后面的文字之间要有一个空格隔开。</li><li>有序列表标记不是按照你写的数字进行显示的，而是根据当前有序列表标记所在位置显示的，如示例1所示。</li><li>无序列表的项目符号是按照实心圆、空心圆、实心方格的层级关系递进的，如例2所示。通常情况下，同一层级使用同一种标记表示，便于自己查看和管理。</li></ol><h4 id="例1：有序列表"><a href="#例1：有序列表" class="headerlink" title="例1：有序列表"></a>例1：有序列表</h4><ol><li>第一点</li><li>第二点</li><li>第三点</li></ol><h4 id="例2：无序列表"><a href="#例2：无序列表" class="headerlink" title="例2：无序列表"></a>例2：无序列表</h4><ul><li>一级无序列表内容</li></ul><ul><li>二级无序列表内容</li></ul><ul><li>二级无序列表内容</li><li>三级无序列表内容</li><li>三级无序列表内容</li></ul><ul><li>一级无序列表内容</li></ul><ul><li>二级无序列表内容</li></ul><h3 id="11-分割线"><a href="#11-分割线" class="headerlink" title="11 分割线"></a>11 分割线</h3><p>使用 <code>---</code> 或者 <code>***</code> 或者 <code>* * *</code> 表示水平分割线。</p><ol><li>只要 <code>*</code> 或者 <code>-</code> 大于等于三个就可组成一条平行线。</li><li>使用 <code>---</code> 作为水平分割线时，要在它的前后都空一行，防止 <code>---</code> 被当成标题标记的表示方式。</li></ol><p>示例</p><hr><hr><hr><h3 id="12表格"><a href="#12表格" class="headerlink" title="12表格"></a>12表格</h3><p>上面空一行下面空两行</p><table><thead><tr><th>Heading</th><th>Heading</th><th>Heading</th></tr></thead><tbody><tr><td>Cell</td><td>Cell</td><td>Cell</td></tr><tr><td>Cell</td><td>Cell</td><td>Cell</td></tr></tbody></table><p>添加边框:</p><table><thead><tr><th>Heading</th><th>Heading</th><th>Heading</th></tr></thead><tbody><tr><td>Cell</td><td>Cell</td><td>Cell</td></tr><tr><td>Cell</td><td>Cell</td><td>Cell</td></tr></tbody></table><p>对齐方式:</p><table><thead><tr><th align="left">Heading</th><th align="center">Heading</th><th align="right">Heading</th></tr></thead><tbody><tr><td align="left">Left</td><td align="center">Center</td><td align="right">Right</td></tr><tr><td align="left">Left</td><td align="center">Center</td><td align="right">Right</td></tr></tbody></table>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> markdown </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>如何建立个人博客网站 hexo+github page</title>
-      <link href="/2019/12/05/ru-he-jian-li-ge-ren-bo-ke-wang-zhan-hexo-github-page/"/>
-      <url>/2019/12/05/ru-he-jian-li-ge-ren-bo-ke-wang-zhan-hexo-github-page/</url>
-      
-        <content type="html"><![CDATA[<h2 id="建立属于自己的博客网站"><a href="#建立属于自己的博客网站" class="headerlink" title="建立属于自己的博客网站"></a>建立属于自己的博客网站</h2><h3 id="基于github和hexo博客框架"><a href="#基于github和hexo博客框架" class="headerlink" title="基于github和hexo博客框架"></a>基于github和hexo博客框架</h3><p>博客在当前世界中对于程序员而言是比较有影响的<br>能长期积累发布博客并且质量比较高的话有利于自己在很多方面的发展<br>有的人选择基于现有的博客网站，有的人会想自己来创建一个</p><p>在这里先跟大家说一些准备条件，有些同学可能一听到搭建博客就望而却步。弄个博客网站，不得有台服务器吗？不得搞数据库吗？不得注册域名吗？没事，如果都没有，那照样是能搭建一个博客的。</p><p>GitHub 是个好东西啊，它提供了 GitHub Pages 帮助我们来架设一个静态网站，这就解决了服务器的问题。</p><p>Hexo 这个博客框架没有那么重量级，它是 MarkDown 直接写文章的，然后 Hexo 可以直接将文章编译成静态网页文件并发布，所以这样文章的内容、标题、标签等信息就没必要存数据库里面了，是直接纯静态页面了，这就解决了数据库的问题。</p><p>GitHub Pages 允许每个账户创建一个名为 {username}.github.io 的仓库，另外它还会自动为这个仓库分配一个 github.io 的二级域名，这就解决了域名的问题，当然如果想要自定义域名的话，也可以支持。</p><p>那么如何来创建一个自己的博客站点呢<br>这里从0开始基于github和hexo博客框架建立起个人博客网站</p><p>首先肯定需要有一个github的账户 如果没有就自己去建一个<a href="https://github.com" target="_blank" rel="noopener">github</a><br>hexo框架是基于nodejs的使用需要下载nodejs<a href="https://nodejs.org/dist/v12.13.1/node-v12.13.1-x64.msi" target="_blank" rel="noopener">下载</a><br>判断是否安装成功可以在cmd中输入</p><pre><code>node -v</code></pre><p>以及</p><pre><code>npm -v</code></pre><p>如果cmd命令行出现了版本信息那么就成功可以进行下一步 否则可能是安装步骤出错了</p><p>实际上如果安装正确应该也会有一个npm的运行程序<br>但是由于国内原因可能下载速度会比较慢<br>所以这里选择去淘宝镜像站下载一个cnpm以确保下载速度能提高点<br>在cmd命令行输入</p><pre><code>npm install -g cnpm —registry=https://registry.npm.taobao.org</code></pre><p><strong>注意 registry前面是两个-</strong></p><h2 id="在github上创建仓库"><a href="#在github上创建仓库" class="headerlink" title="在github上创建仓库"></a>在github上创建仓库</h2><p>在整个博客搭建前需要先在GitHub上新建一个仓库，名称为 {username}.github.io，注意这个名比较特殊，必须要是 github.io 为后缀结尾的。</p><p>eg：我的github昵称是oslijw 所以这个仓库名字必须是oslijw.github.io</p><p>新建完成后就可以进行下一步操作</p><h2 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h2><p>上面已经安装好了nodejs和cnpm</p><p>下一步就可以安装hexo博客框架</p><p>在cmd中输入</p><pre><code>cnpm install -g hexo-cli</code></pre><p>这边实际上是安装了hexo的命令行工具</p><p>安装成功后就可以开始使用好用的hexo命令</p><h2 id="初始化hexo项目"><a href="#初始化hexo项目" class="headerlink" title="初始化hexo项目"></a>初始化hexo项目</h2><p>接下来就需要初始化一个hexo项目</p><pre><code>hexo init {program-name}</code></pre><p>像我给我的blog项目直接命名blog所以代码是这样的：</p><pre><code>hexo init blog</code></pre><p>windows下使用</p><pre><code>dir</code></pre><p>就可以列出当前目录下的文件<br>这时候会发现有一些css 之类的文件</p><p>跳到新建文件夹下使用</p><pre><code>hexo generate</code></pre><p>这时候就能发现这些文件夹出现在oublic文件夹下</p><p>接下来，激动人心的时候到了，看看项目能不能在本地跑通，在cmd输入</p><pre><code>hexo s</code></pre><p><strong>其实这个s代表server 也可以认为是start 但是实际上全部都打上去是hexo server</strong></p><p>然后命令行就会出现</p><pre><code>INFO Start processingINFO Hexo is running at http://localhost:4000 . Press Ctrl+C to stop</code></pre><p>这就说明我们可以在本地的4000端口访问自己的博客网站<br>在浏览器搜索栏输入 <a href="https://localhost:4000" target="_blank" rel="noopener">https://localhost:4000</a> 就可以了</p><p>所以只需要三个命令就创建好一个博客了</p><h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>接下来我们来将这个初始化的博客进行一下部署，放到 GitHub Pages 上面验证一下其可用性。成功之后我们可以再进行后续的修改，比如修改主题、修改页面配置等等。</p><p>那么怎么把这个页面部署到 GitHub Pages 上面呢，其实 Hexo 已经给我们提供一个命令，利用它我们可以直接将博客一键部署，不需要手动去配置服务器或进行其他的各项配置。</p><pre><code>hexo d</code></pre><p><strong>这个d是deploy</strong></p><p>但是呢直接部署会报错吧 因为还没配置，连仓库地址都不知道 怎么部署上去呢？</p><p>所以就需要修改配置文件</p><p>打开根目录下的 _config.yml 文件，找到 Deployment 这个地方，把刚才新建的 Repository 的地址贴过来，然后指定分支为 master 分支，最终修改为如下内容：</p><pre><code>deployment.htmldeploy:type: gitrepo: {git repo ssh address}branch: master</code></pre><p>repo那边需要加入自己git的远程地址</p><p>当然这时候还是不能直接部署，真觉得改个配置文件就可以了吗？当然不行 这时候还会报错 还欠缺一个支持git部署的插件hexo-deployer-git<br>命令如下</p><pre><code>cnpm install —save hexo-deployer-git</code></pre><p>安装成功后执行部署命令</p><pre><code>hexo d</code></pre><p>然后就可以通过github访问<br>https://{username}.github.io<br>就可以访问了 如果能正常访问就说明部署成功 如果失败就说明可能有问题</p><h2 id="一些相关配置"><a href="#一些相关配置" class="headerlink" title="一些相关配置"></a>一些相关配置</h2><p>这边就不具体展开 需要的时候再自行去查找一下配置方法，简单说明几个配置<br>主要是在-config.yml文件中进行配置</p><h3 id="配置主题"><a href="#配置主题" class="headerlink" title="配置主题"></a>配置主题</h3><p>有的人可能会觉得，诶自带的主题不好看，想从网上找一些好看的主题进行配置</p><p>诶，其实也是可以自行配置的步骤如下<br>首先，需要从github上找到相应的主题资源然后clone到本地</p><p>例如：在hexo中比较流行的框架也就是next了，而且在一些功能上也比较完善，不然哪里能在github上有那么大的star量是吧</p><p>我们的clone也是直接到github上的repository下载下来</p><p>主题的 GitHub 地址是：<a href="https://github.com/theme-next/hexo-theme-next" target="_blank" rel="noopener">https://github.com/theme-next/hexo-theme-next</a> ，我们可以直接把 master 分支 Clone 下来</p><pre><code>git clone https://github.com/theme-next/hexo-theme-next themes/next</code></pre><p><strong>此时命令行应该退到根目录下</strong></p><p>执行完毕之后 Next 主题的源码就会出现在项目的 themes/next 文件夹下。</p><p>然后我们需要修改下博客所用的主题名称，修改项目根目录下的 _config.yml 文件，找到 theme 字段，修改为 next 即可，修改如下：</p><pre><code>theme：next</code></pre><p><strong>这边只是做了一个范例 也可以从GitHub上弄别的主题 操作方面也是大同小异</strong></p><h2 id="配置主题样式"><a href="#配置主题样式" class="headerlink" title="配置主题样式"></a>配置主题样式</h2><p>有了主题，但是肯定也要自定义化修改一下配置吧，总不能按着人家原有的样子直接使用吧</p><p>Next 主题内部也提供了一个配置文件，名字同样叫做 _config.yml，只不过位置不一样，它在 themes/next 文件夹下，Next 主题里面所有的功能都可以通过这个配置文件来控制，下文所述的内容都是修改的 themes/next/_config.yml 文件。</p><h3 id="样式"><a href="#样式" class="headerlink" title="样式"></a>样式</h3><p>Next 主题还提供了多种样式，风格都是类似黑白的搭配，但整个布局位置不太一样，通过修改配置文件的 scheme 字段即可，我选了 Pisces 样式，修改 _config.yml （注意是 themes/next/_config.yml 文件）如下：</p><pre><code>scheme: Pisces</code></pre><p>另外还有几个可选项，比如：<br>Muse，Mist，Pisces，Gemini</p><p>可以根据自己的喜好对其进行更换</p><h3 id="favicon"><a href="#favicon" class="headerlink" title="favicon"></a>favicon</h3><p>favicon 就是站点标签栏的小图标，默认是用的 Hexo 的小图标，如果我们有站点 Logo 的图片的话，我们可以自己定制小图标。</p><p>但这并不意味着我们需要自己用 PS 自己来设计，已经有一个网站可以直接将图片转化为站点小图标，站点链接为：<a href="https://realfavicongenerator.net" target="_blank" rel="noopener">https://realfavicongenerator.net</a>，到这里上传一张图，便可以直接打包下载各种尺寸和适配不同设备的小图标。</p><p>图标下载下来之后把它放在 themes/next/source/images 目录下面。</p><p>然后在配置文件里面找到 favicon 配置项，把一些相关路径配置进去即可，示例如下：</p><pre><code>favicon:small: /images/favicon-16x16.pngmedium: /images/favicon-32x32.pngapple_touch_icon: /images/apple-touch-icon.pngsafari_pinned_tab: /images/safari-pinned-tab.svg</code></pre><p>然后刷新一下页面就可以看到已经改变了</p><p><strong>还有一些更多的操作在这边就不一一列举了</strong></p><h2 id="发布文章"><a href="#发布文章" class="headerlink" title="发布文章"></a>发布文章</h2><p>现在整个博客只有一篇文章，那么如何写文章呢？配置好了博客，当然是关注如何发布文章，不然搭建了有什么用呢？</p><p>接下来，就说明一下如何发布文章</p><p>调用hexo命令</p><pre><code>hexo n “文章名字”</code></pre><p><strong>创建的文章会在source/_posts文件夹里面，是markdown格式的，所以需要学一下，但是也没那么难，不像html一样麻烦</strong></p><p>文章也有一些必要信息可以添加</p><pre><code>---title: 标题 # 自动创建，如 hello-worlddate: 日期 # 自动创建，如 2019-09-22 01:47:21tags:- 标签1- 标签2- 标签3categories:- 分类1- 分类2---</code></pre><p>添加信息就vans了</p><p>还有一些别的信息，请查看<a href="https://hexo.io/zh-cn/docs/writing.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/writing.html</a></p><p><strong>然后也可以配置一些标签页啥的，具体看看别的，或者在不久的将来，我会再次发布</strong><br>详见hexo官方文档<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/</a>以查看相关细节，这里就不一一介绍</p>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Hello World</title>
-      <link href="/2019/12/04/hello-world/"/>
-      <url>/2019/12/04/hello-world/</url>
-      
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span></code></pre><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-  
-  
+<search>
+  <entry>
+    <title>cnki-spider-知网爬虫</title>
+    <url>/2020/01/27/cnki-spider-zhi-wang-pa-chong/</url>
+    <content><![CDATA[<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>在当前信息量爆炸的世界中,如何高效的采集到有效的信息非常关键</p>
+<p>而信息采集又不得不说一下爬虫,自动化采集省的自己去一个一个复制黏贴</p>
+<p>然后呢,刚刚好自己有爬知网(CNKI)的一些小需求,当然就是采集一下摘要什么的做分析研究用的</p>
+<h2 id="爬虫的选择"><a href="#爬虫的选择" class="headerlink" title="爬虫的选择"></a>爬虫的选择</h2><p>说到爬虫,很多人第一念头可能就是Python了,当然我也是用python进行开发</p>
+<p>记录一下自己爬知网的一些心得</p>
+<h2 id="事前准备"><a href="#事前准备" class="headerlink" title="事前准备"></a>事前准备</h2><p>下载python3.6 安装好requests,lxml等必要库</p>
+<h2 id="爬取步骤"><a href="#爬取步骤" class="headerlink" title="爬取步骤"></a>爬取步骤</h2><p>先抓包,抓到详情页的数据包,然后访问看看源码里面是否有对应需要的信息</p>
+<p>emmm假设这一步懂怎么抓包</p>
+<p>接下来就可以开始准备代码的编写</p>
+<h3 id="先导入必要的包"><a href="#先导入必要的包" class="headerlink" title="先导入必要的包"></a>先导入必要的包</h3><pre><code>#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# author : oslijw
+import requests
+import re
+from bs4 import BeautifulSoup as bs
+import time
+import random
+import csv
+import lxml
+from lxml import etree</code></pre><h3 id="获取网页源代码"><a href="#获取网页源代码" class="headerlink" title="获取网页源代码"></a>获取网页源代码</h3><p>实际上,需要封装起来,不然到时候改个代码也麻烦</p>
+<pre><code># 获得网页源码
+def get_page_thing(url):
+    uapools = [
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134&quot;,
+    ]
+    page_ua = random.choice(uapools)
+    page_cookies = random.choice(cookies_list)
+    headers = {
+        &quot;User_Agent&quot;: page_ua,
+        &quot;Cookie&quot;: page_cookies,
+    }
+    try:
+        response = requests.get(url,headers = headers,timeout = 3)
+        response.raise_for_status()
+        response.encoding = &#39;utf8&#39;# response.apparent_encoding
+    except Exception as err:
+        print(&quot;出现了异常情况,异常情况是 : &quot; + str(err))
+        time.sleep(3*random.random())
+    return response.text</code></pre><h3 id="使用xpath进行提取"><a href="#使用xpath进行提取" class="headerlink" title="使用xpath进行提取"></a>使用xpath进行提取</h3><pre><code># 使用xpath进行提取并且保存
+def paser_html(response_text):
+        tree = etree.HTML(response_text)
+        for i in range(2, 52, 1):
+            a_recording = []
+            detail_url = tree.xpath(&quot;//tr[&quot; + str(i) + &quot;]//a[@class=&#39;fz14&#39;]/@href&quot;)
+            fn = re.compile(&quot;FileName=(.*?)&amp;&quot;).findall(detail_url[0])
+            dn = re.compile(&quot;DbName=(.*?)&amp;&quot;).findall(detail_url[0])
+            dc = re.compile(&quot;DbCode=(.*?)&amp;&quot;).findall(detail_url[0])
+            detail_url = &quot;https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode={}&amp;dbname={}&amp;filename={}&quot;.format(dc[0],
+                                                                                                               dn[0],
+                                                                                                               fn[0])
+            a_recording.append(detail_url)
+            store_url(detail_url)
+            title_keyword_summary = get_title_key_word_summary(paser_detail(detail_url))
+            a_recording = a_recording + title_keyword_summary
+            for j in range(3, 5, 1):
+                title_author_unit = tree.xpath(
+                    &#39;//table[@class=&quot;GridTableContent&quot;]//tr[&#39; + str(i) + &#39;]/td[&#39; + str(j) + &#39;]/a/text()&#39;)
+                if len(title_author_unit) == 1:
+                    a = &quot;&quot;.join(title_author_unit)
+                else:
+                    a = &quot;;&quot;.join(title_author_unit)
+                a_recording.append(a)
+            if True:
+                time_database = tree.xpath(
+                    &quot;//table[@class=&#39;GridTableContent&#39;]//tr[&quot; + str(i) + &quot;]/td[@align=&#39;center&#39;]/text()&quot;)
+                reference = tree.xpath(&quot;//table//tr[&quot; + str(i) + &quot;]/td[7]/span[@class=&#39;KnowledgeNetcont&#39;]//text()&quot;)
+                download = tree.xpath(&quot;//table//tr[&quot; + str(i) + &quot;]/td[8]/span[@class=&#39;downloadCount&#39;]//text()&quot;)
+                if len(reference)!=0:
+                    ref = reference[0].strip()
+                else:
+                    ref = &#39;-&#39;
+                if len(download) != 0:
+                    down = download[0].strip()
+                else:
+                    down = &#39;-&#39;
+                atr_time = time_database[0].strip()  # [a_tuple.strip() for a_tuple in time_database[0]]
+                database = time_database[1].strip()  # [b_tuple.strip() for b_tuple in time_database[1]]
+                a_recording.append(atr_time)
+                a_recording.append(database)
+                a_recording.append(down)
+                a_recording.append(ref)
+            print(a_recording)
+            print()
+            store_into_csv(a_recording)
+        print(&quot;store into csv_file&quot;)
+</code></pre><h3 id="存储模块"><a href="#存储模块" class="headerlink" title="存储模块"></a>存储模块</h3><p>有的人可能看了上面,就会疑问哪里来的store_into_csv的方法</p>
+<p>这不看着名字就应该知道是存储模块了</p>
+<pre><code># 使得每个文献的数据起码能包含在一个列表中存储到csv
+def store_into_csv(a_recording):
+    with open(r&#39;C:\Users\oslijw\Desktop\cnki_spider1.csv&#39;, &#39;a&#39;, newline=&#39;&#39;, encoding=&#39;utf-8-sig&#39;) as out:
+        csv_write = csv.writer(out, dialect=&#39;excel&#39;)
+        csv_write.writerow(a_recording)</code></pre><h3 id="提取详情页的一些信息"><a href="#提取详情页的一些信息" class="headerlink" title="提取详情页的一些信息"></a>提取详情页的一些信息</h3><pre><code># 获得详情页的标题,关键词,摘要
+def get_title_key_word_summary(text):
+    tree = etree.HTML(text)
+    return_value = []
+    key_word = tree.xpath(&quot;//label[@id=&#39;catalog_KEYWORD&#39;]/../a/text()&quot;)
+    key_word = &quot;&quot;.join([aword.strip() for aword in key_word])
+    if len(tree.xpath(&quot;//h2[@class=&#39;title&#39;]/text()&quot;))!=0:
+        return_value.append(tree.xpath(&quot;//h2[@class=&#39;title&#39;]/text()&quot;)[0])
+    else:
+        return_value.append(&#39;-&#39;)
+    return_value.append(key_word)
+    if len(tree.xpath(&quot;//span[@id=&#39;ChDivSummary&#39;]/text()&quot;))!=0:
+        return_value.append(tree.xpath(&quot;//span[@id=&#39;ChDivSummary&#39;]/text()&quot;)[0])
+    else:
+        return_value.append(&#39;-&#39;)
+    return return_value</code></pre><h3 id="爬取摘要"><a href="#爬取摘要" class="headerlink" title="爬取摘要"></a>爬取摘要</h3><p>在详情页上面呢,摘要是不全的</p>
+<p>所以需要爬取详情页</p>
+<pre><code># 爬取详情页中的一些信息
+def paser_detail(url):
+    uapools = [
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134&quot;,
+    ]
+    page_ua = random.choice(uapools)
+    headers = {
+        &quot;User_Agent&quot;: page_ua,
+    }
+    try:
+        response = requests.get(url, headers=headers, timeout=3)
+        response.raise_for_status()
+        response.encoding = &#39;utf8&#39;  # response.apparent_encoding
+    except Exception as err:
+        print(&quot;出现了异常情况,异常情况是 : &quot; + str(err))
+        time.sleep(3 * random.random())
+    return response.text</code></pre><h1 id="主方法"><a href="#主方法" class="headerlink" title="主方法"></a>主方法</h1><p>最后根据习惯写一个主方法就可以了</p>
+<h3 id="最重要的一点"><a href="#最重要的一点" class="headerlink" title="最重要的一点"></a>最重要的一点</h3><p>知网有一些反爬手段</p>
+<p>需要传入cookies才可以</p>
+<pre><code>cookies_list = [
+    ]
+    # 这边的cookies 需要是详情页的cookies,会过期
+</code></pre><h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><pre><code>#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# author : oslijw
+import requests
+import re
+from bs4 import BeautifulSoup as bs
+import time
+import random
+import csv
+import lxml
+from lxml import etree
+# cookies列表需要替换
+cookies_list = [
+    # 需要换掉知网的反爬这边只有涉及cookies
+    ]
+# 获得网页源码
+def get_page_thing(url):
+    uapools = [
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134&quot;,
+    ]
+    page_ua = random.choice(uapools)
+    page_cookies = random.choice(cookies_list)
+    headers = {
+        &quot;User_Agent&quot;: page_ua,
+        &quot;Cookie&quot;: page_cookies,
+    }
+    try:
+        response = requests.get(url,headers = headers,timeout = 3)
+        response.raise_for_status()
+        response.encoding = &#39;utf8&#39;# response.apparent_encoding
+    except Exception as err:
+        print(&quot;出现了异常情况,异常情况是 : &quot; + str(err))
+        time.sleep(3*random.random())
+    return response.text
+
+# 使用xpath进行提取并且保存
+def paser_html(response_text):
+        tree = etree.HTML(response_text)
+        for i in range(2, 52, 1):
+            a_recording = []
+            detail_url = tree.xpath(&quot;//tr[&quot; + str(i) + &quot;]//a[@class=&#39;fz14&#39;]/@href&quot;)
+            fn = re.compile(&quot;FileName=(.*?)&amp;&quot;).findall(detail_url[0])
+            dn = re.compile(&quot;DbName=(.*?)&amp;&quot;).findall(detail_url[0])
+            dc = re.compile(&quot;DbCode=(.*?)&amp;&quot;).findall(detail_url[0])
+            detail_url = &quot;https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode={}&amp;dbname={}&amp;filename={}&quot;.format(dc[0],
+                                                                                                               dn[0],
+                                                                                                               fn[0])
+            # 构造出具体链接的url由于概括页部分信息缺失
+        a_recording.append(detail_url)
+            store_url(detail_url)
+            title_keyword_summary = get_title_key_word_summary(paser_detail(detail_url))
+            a_recording = a_recording + title_keyword_summary
+            for j in range(3, 5, 1):
+                title_author_unit = tree.xpath(
+                    &#39;//table[@class=&quot;GridTableContent&quot;]//tr[&#39; + str(i) + &#39;]/td[&#39; + str(j) + &#39;]/a/text()&#39;)
+                if len(title_author_unit) == 1:
+                    a = &quot;&quot;.join(title_author_unit)
+                else:
+                    a = &quot;;&quot;.join(title_author_unit)
+                a_recording.append(a)
+            if True:
+                time_database = tree.xpath(
+                    &quot;//table[@class=&#39;GridTableContent&#39;]//tr[&quot; + str(i) + &quot;]/td[@align=&#39;center&#39;]/text()&quot;)
+                reference = tree.xpath(&quot;//table//tr[&quot; + str(i) + &quot;]/td[7]/span[@class=&#39;KnowledgeNetcont&#39;]//text()&quot;)
+                download = tree.xpath(&quot;//table//tr[&quot; + str(i) + &quot;]/td[8]/span[@class=&#39;downloadCount&#39;]//text()&quot;)
+                if len(reference)!=0:
+                    ref = reference[0].strip()
+                else:
+                    ref = &#39;-&#39;
+                if len(download) != 0:
+                    down = download[0].strip()
+                else:
+                    down = &#39;-&#39;
+                atr_time = time_database[0].strip()  # [a_tuple.strip() for a_tuple in time_database[0]]
+                database = time_database[1].strip()  # [b_tuple.strip() for b_tuple in time_database[1]]
+                a_recording.append(atr_time)
+                a_recording.append(database)
+                a_recording.append(down)
+                a_recording.append(ref)
+            print(a_recording)
+            print()
+            store_into_csv(a_recording)
+        print(&quot;store into csv_file&quot;)
+
+# 爬取详情页中的一些信息
+def paser_detail(url):
+    uapools = [
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134&quot;,
+    ]
+    page_ua = random.choice(uapools)
+    headers = {
+        &quot;User_Agent&quot;: page_ua,
+    }
+    try:
+        response = requests.get(url, headers=headers, timeout=3)
+        response.raise_for_status()
+        response.encoding = &#39;utf8&#39;  # response.apparent_encoding
+    except Exception as err:
+        print(&quot;出现了异常情况,异常情况是 : &quot; + str(err))
+        time.sleep(3 * random.random())
+    return response.text
+
+# 获得详情页的标题,关键词,摘要
+def get_title_key_word_summary(text):
+    tree = etree.HTML(text)
+    return_value = []
+    key_word = tree.xpath(&quot;//label[@id=&#39;catalog_KEYWORD&#39;]/../a/text()&quot;)
+    key_word = &quot;&quot;.join([aword.strip() for aword in key_word])
+    if len(tree.xpath(&quot;//h2[@class=&#39;title&#39;]/text()&quot;))!=0:
+        return_value.append(tree.xpath(&quot;//h2[@class=&#39;title&#39;]/text()&quot;)[0])
+    else:
+        return_value.append(&#39;-&#39;)
+    return_value.append(key_word)
+    if len(tree.xpath(&quot;//span[@id=&#39;ChDivSummary&#39;]/text()&quot;))!=0:
+        return_value.append(tree.xpath(&quot;//span[@id=&#39;ChDivSummary&#39;]/text()&quot;)[0])
+    else:
+        return_value.append(&#39;-&#39;)
+    return return_value
+
+# 把url存储到本地
+def store_url(url):
+    with open(r&#39;detail_url.text&#39;,&#39;a&#39;) as file:
+        file.write(url+&quot;\n&quot;)
+
+# 使得每个文献的数据起码能包含在一个列表中存储到csv
+def store_into_csv(a_recording):
+    with open(r&#39;C:\Users\oslijw\Desktop\cnki_spider1.csv&#39;, &#39;a&#39;, newline=&#39;&#39;, encoding=&#39;utf-8-sig&#39;) as out:
+        csv_write = csv.writer(out, dialect=&#39;excel&#39;)
+        csv_write.writerow(a_recording)
+
+# 主方法的入口,传入数来爬取相应的详情页
+def main(count):
+    if count == 1:
+        url = # 自己抓包 把接口抓到
+    else:
+        url = # 根据接口的url构造逻辑来实现翻页
+    print(&quot;----------------------------------------------------&quot;)
+    print(url)
+    print(&quot;----------------------------------------------------&quot;)
+    response = get_page_thing(url)
+    paser_html(response)
+
+if __name__ == &#39;__main__&#39;:
+    for count in range(1,120,1):# 1-121
+        print(&quot;crawl page&quot; + str(count))
+        main(count)</code></pre>]]></content>
+      <tags>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>R-for-data-science</title>
+    <url>/2020/01/24/r-for-data-science/</url>
+    <content><![CDATA[<h2 id="数据科学是什么"><a href="#数据科学是什么" class="headerlink" title="数据科学是什么"></a>数据科学是什么</h2><p>数据科学是一个人们从生数据(raw data)中理解,明确以及获得知识的有趣学科</p>
+<p>数据科学是一个很大的领域,没有任何途径能让人简单的从一本书中了解到全部内容.</p>
+<h2 id="数据分析的有力工具–R"><a href="#数据分析的有力工具–R" class="headerlink" title="数据分析的有力工具–R"></a>数据分析的有力工具–R</h2><p>在使用R进行数据分析的时候是分阶段,分步骤进行的</p>
+<p><img src="https://i.loli.net/2020/01/24/Gs4Fj9KxgOervPX.png" alt=""></p>
+<h4 id="数据来源-import"><a href="#数据来源-import" class="headerlink" title="数据来源(import)"></a>数据来源(import)</h4><p>首先需要把自己的数据导入(import)到R中,一般而言,数据存储在文件,数据库或者web API(web接口),我们需要把数据以数据框(data frame)的形式导入到R中,如果无法把数据导入到R中,那何谈数据科学呢?</p>
+<h4 id="规整数据-tidy"><a href="#规整数据-tidy" class="headerlink" title="规整数据(tidy)"></a>规整数据(tidy)</h4><p>当我们导入数据后,而数据在收集过程中有着这样那样的问题,所以需要规整数据让数据以统一的格式存在,有利于自己对数据进行进一步的加工  比如:让每一列都是同一种变量类型,每一行都是一个观测值(observation)</p>
+<h4 id="TVM-transform-visualize-model"><a href="#TVM-transform-visualize-model" class="headerlink" title="TVM(transform-visualize-model)"></a>TVM(transform-visualize-model)</h4><p>当规整数据后第一步通常是转化数据,而这一步包括了规范化数据(类似于数仓里面的z-score规划化,最大最小规范化,小数定标规范化等有利于提高分析的精度),基于存在的变量创建新的变量(比如通过时间和路程这两个变量,我们可以得到平均速度这个额外的变量),计算某一个统计量(计算一个集合的求和等),值得注意的是tidy和transform这两个有时会统称为wrangling(对数据进行规整处理的意思,是一个比较难直译的词=&gt;争论)<br>当有了规整后的数据和自己需要的变量后,接下来就有两个主要的知识认识的迭代过程:可视化(visualization)和建模(modeling)二者之间是互补的关系,所有的数据都需要在这二者之间迭代很多次<br>可视化是一个很基础的行为,一个好的可视化有助于自己查看自己的数据而不是依靠直觉去猜,当然可视化也有很多好处而建模则是与其互补,可以用于预测等</p>
+<h4 id="交流-communication"><a href="#交流-communication" class="headerlink" title="交流(communication)"></a>交流(communication)</h4><p>最后一步就是数据科学的交流了.除非能够很好的和别人交流自己分析的结果,不然自己的建模和可视化可能就是有问题的就需要改进或者重新思考</p>
+<p>编程不是必须的,重点是在理解整个过程,但是如果会编程会有助于自己使用高效的工具进行数据分析</p>
+<p>可以在每个数据科学工程中使用这些工具,但是可能还不够,有的时候还需要使用别的一些工具.</p>
+<p>处理大量(10-100GB)的数据时可能需要用到data.table</p>
+<h2 id="事前准备"><a href="#事前准备" class="headerlink" title="事前准备"></a>事前准备</h2><h3 id="R"><a href="#R" class="headerlink" title="R"></a>R</h3><h3 id="RStudio-开发环境-IDE"><a href="#RStudio-开发环境-IDE" class="headerlink" title="RStudio (开发环境,IDE)"></a>RStudio (开发环境,IDE)</h3><p>RStudio是常用的R语言开发工具,当然也可以用vscode等进行开发,看个人看法</p>
+<h3 id="一些必要的库-包"><a href="#一些必要的库-包" class="headerlink" title="一些必要的库(包)"></a>一些必要的库(包)</h3><p>库是方法,数据,拓展文档的集合.正确使用库是成功使用R的关键</p>
+<p>Tidyverse==&gt;a common philosophy of data<br>使用<br><code>install.packages(&#39;library_name&#39;)</code><br>来安装库</p>
+<p>当然在安装后并不是随时准备被使用的我们需要使用library()来导入也就是import</p>
+<p><img src="https://s2.ax1x.com/2020/01/24/1ZIGAe.png" alt=""></p>
+<p>由此可见,在加载这库的时候会同时加载ggplot2,tibble,tidyr,readr,purrr,等库,同时这些库也是tidyverse的核心,我们在很多分析场合使用它们(具体的使用接下来会有所解释)<br>这里面的一些库的高性是很经常的,我们可以看到哪些更新是可用的,同时可用有选择的进行安装(使用tidyverse_update()方法)</p>
+<p>上面可以知道很多库包含在tidyverse里面<br>可是还是有一部分常用库不是tidyverse的一部分,所以需要额外的安装</p>
+<pre><code>    Install.packages(c(&#39;nycflight13&#39;,
+            &#39;gapminder&#39;,
+            &#39;Lahman&#39;))</code></pre><p>c是一个向量的表示 这个可以批量的进行安装</p>
+<p>这些包提供了航班数据,世界的发展数据,和棒球数据</p>
+<h2 id="冲R"><a href="#冲R" class="headerlink" title="冲R!"></a>冲R!</h2>]]></content>
+  </entry>
+  <entry>
+    <title>拉勾网爬虫</title>
+    <url>/2020/01/16/la-gou-wang-pa-chong/</url>
+    <content><![CDATA[<h2 id="需求-爬取拉勾网某一特定职业对应的招聘岗位"><a href="#需求-爬取拉勾网某一特定职业对应的招聘岗位" class="headerlink" title="需求: 爬取拉勾网某一特定职业对应的招聘岗位"></a>需求: 爬取拉勾网某一特定职业对应的招聘岗位</h2><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>比如我现在需要爬取拉勾网上关于爬虫的岗位</p>
+<p>首先当然是点击<a href="https://www.lagou.com/" target="_blank" rel="noopener">拉勾网</a></p>
+<p>然后在搜索栏搜索<strong>爬虫</strong>二字</p>
+<p>然后跳转到<br><img src="https://i.loli.net/2020/01/16/anF3N1suDAVXQqv.png" alt="">这个页面</p>
+<p>ctrl+u看一下 果然没有岗位信息 然后试着抓包一下</p>
+<p>发现招聘数据在是json格式的<br><img src="https://i.loli.net/2020/01/16/D7t2TkWZwALOR16.png" alt=""></p>
+<p>还是post请求的啊那第一步想到的肯定是requests.post方法把data一起提交</p>
+<p>但是事情没那么简单 这样的方法会有这样的结果<br><img src="https://i.loli.net/2020/01/16/LHZNmlos1YVJcOe.png" alt=""></p>
+<p>害 这下可咋整</p>
+<p>然后我就搜了一下</p>
+<p>原来要用session对象来弄</p>
+<p>行吧那就用吧,然后果然<br><img src="https://i.loli.net/2020/01/16/AoTBIM7QkGze5jS.png" alt=""><br>成了!!!</p>
+<p>然后接下来就是解析一下然后放到csv文件里面或者数据库里面了</p>
+<h2 id="session"><a href="#session" class="headerlink" title="session"></a>session</h2><p>上面提到了session<br>那么session是什么呢??</p>
+<h3 id="关于session"><a href="#关于session" class="headerlink" title="关于session"></a>关于session</h3><p>session是会话对象</p>
+<p>会话对象让你能够跨请求保持某些参数。</p>
+<p>它也会在同一个 Session 实例发出的所有请求之间保持 cookie</p>
+<p>所以如果你向同一主机发送多个请求，底层的 TCP 连接将会被重用，从而带来显著的性能提升。</p>
+<h3 id="为什么用到session"><a href="#为什么用到session" class="headerlink" title="为什么用到session"></a>为什么用到session</h3><p>可能…我上面忘记加cookie了?</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>说了这么多也没用</p>
+<p>还不如把自己的”内裤”(代码)交出来</p>
+<pre><code># -*- coding: utf-8 -*-
+# coder: oslijw
+# blog : https://oslijw.github.io/
+
+import requests
+
+if __name__ == &#39;__main__&#39;:
+    data = {
+        &#39;first&#39;: &#39;true&#39;,
+        &#39;pn&#39;: &quot;1&quot;,
+        &#39;kd&#39;: &#39;爬虫&#39;,
+    }
+    my_headers = {
+        &#39;User-Agent&#39;: &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36&#39;,
+        &#39;Origin&#39;: &#39;www.lagou.com&#39;,
+        &#39;Referer&#39;: &#39;https://www.lagou.com/jobs/list_%E7%88%AC%E8%99%AB?labelWords=&amp;fromSearch=true&amp;suginput=&#39;,
+        &#39;X-Anit-Forge-Code&#39;: &#39;0&#39;,
+        &#39;X-Anit-Forge-Token&#39;: &#39;None&#39;,
+        &#39;X-Requested-With&#39;: &#39;XMLHttpRequest&#39;
+    }
+    session = requests.session()
+    session.get(&#39;https://www.lagou.com/jobs/list_%E7%88%AC%E8%99%AB?labelWords=&amp;fromSearch=true&amp;suginput=&#39;, headers=my_headers)
+    res = session.post(&#39;https://www.lagou.com/jobs/positionAjax.json?needAddtionalResult=false&#39;, headers=my_headers, data=data)
+    print(res.json())</code></pre><h2 id="接下来就是存储了"><a href="#接下来就是存储了" class="headerlink" title="接下来就是存储了"></a>接下来就是存储了</h2><p>解析一下json格式的数据</p>
+<p>按自己需要存到csv或者数据库里面就可以了</p>
+<p>然后就可以”快乐”的数据分析了</p>
+]]></content>
+      <tags>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>循环移动若干元素</title>
+    <url>/2020/01/06/xun-huan-zuo-yi-ruo-gan-yuan-su/</url>
+    <content><![CDATA[<h2 id="问题的提出"><a href="#问题的提出" class="headerlink" title="问题的提出"></a>问题的提出</h2><p>给定一个数组,要求把前n位的元素移动到最后面,这n个顺序不变</p>
+<p>然后后面的其他元素全部向前移动,顺序也保持</p>
+<p>大概就是</p>
+<p>[a,b,c,d,e]==循环左移动2位==&gt;[c,d,e,a,b]</p>
+<p>要求以最好的效率进行</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>算法分析从两个方面入手</p>
+<p>时间效率(时间复杂度)和空间效率(空间复杂度)</p>
+<p>在算法设计的时候往往会更加注意时间复杂度</p>
+<p>一般时候两者是没办法同时达到最大的</p>
+<p>有的人可能会想把前n个取出来<br>然后把后面元素前移就好了</p>
+<p>但是这样的效率真的高嘛?</p>
+<p>试想把前面n个翻转一下 把后面的元素在翻转一下<br>然后把整体数组在翻转一下</p>
+<p>m个元素 迁移n位<br>这样时间效率就是O(m)<br>空间效率就是O(1)<br>:)如果不会分析的话 可以私聊我或者评论一下<br>我找时间写一个简单的分析</p>
+<p>虽然上面的想法的时间复杂度看起来好像也是O(m)<br>但是空间复杂度可就是o(n)了</p>
+<p>可见二者的效率差距之大</p>
+<h2 id="代码的编写"><a href="#代码的编写" class="headerlink" title="代码的编写"></a>代码的编写</h2><p>上面的算法逻辑是比较清晰的</p>
+<p>就是声明一个临时变量 然后进行翻转就可以了</p>
+<p>翻转三次就可以了</p>
+<p>所以这里可能就需要把翻转的代码翻转成一个方法</p>
+<h3 id="翻转方法"><a href="#翻转方法" class="headerlink" title="翻转方法"></a>翻转方法</h3><pre><code>  private static void similarSameCode(int low,int high){
+        int somePlace = 0;
+        char temporaryStorage;//临时变量存储
+        for (int i = low;i &lt; high;i++){
+        //这边就是简单的交换值
+            temporaryStorage = chain[i];
+            chain[i] = chain[high - 1 - somePlace];
+            chain[high - 1 - somePlace] = temporaryStorage;
+            somePlace ++;
+            if (somePlace == (high -1 -low) /2 + 1){
+                break;
+            }
+        }</code></pre><h3 id="翻转三次"><a href="#翻转三次" class="headerlink" title="翻转三次"></a>翻转三次</h3><p>一次翻转搞好了</p>
+<p>接下来只需要在主方法里面进行三次就可以了</p>
+<pre><code>/*原来代码里面是按习惯声明了一个翻转数组类
+  然后我也懒得调了
+  就将就着看吧
+  */
+  public class Demo2_1 {
+    //测试类
+    public static void main(String[] args) {
+        //产生随机整数,以逆转
+        ReverseChain a = new ReverseChain();
+        System.out.println(&quot;原来数组的亚子: &quot; + a.getChain());
+        System.out.print(&quot;循环左移后: &quot;);
+        System.out.println(a);
+        int len = a.getChainLength();
+        int i = (int)(Math.random() * len);
+        System.out.println(&quot;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*&quot;);
+        System.out.println(&quot;循环左移&quot; + i + &quot;位&quot;);
+        ReverseChain b = new ReverseChain(i);
+        System.out.println(&quot;原来数组的亚子和上面一样,就是可能左移位数有随机数生成会有区别&quot;);
+        System.out.println(b);
+    }
+
+}
+class ReverseChain{
+    //逆转链类
+    private char[]chain = {&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;f&#39;,&#39;g&#39;,&#39;h&#39;,&#39;i&#39;,&#39;j&#39;,&#39;k&#39;,&#39;l&#39;,&#39;m&#39;,&#39;n&#39;,&#39;o&#39;,&#39;p&#39;,&#39;q&#39;};
+    private int position;//循环左移的位数
+    public ReverseChain(){
+        //默认循环左移5位
+        this(5);
+    }
+    public ReverseChain(int posion){
+        this.position = posion;
+        headle(position);
+    }
+    public int getChainLength(){
+        return chain.length;
+    }
+
+    public String getChain() {
+        char[]chain = {&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;f&#39;,&#39;g&#39;,&#39;h&#39;,&#39;i&#39;,&#39;j&#39;,&#39;k&#39;,&#39;l&#39;,&#39;m&#39;,&#39;n&#39;,&#39;o&#39;,&#39;p&#39;,&#39;q&#39;};
+        int i = 0;
+        StringBuffer sb2 = new StringBuffer(&quot;&quot;);
+        for (char a: chain){
+            if (i == 0) {
+                i++;
+                sb2.append(a);
+            }
+            else {
+                sb2.append(&quot; - &quot; + a);
+            }
+        }
+        String str = sb2.toString();
+        return str;
+    }
+
+    private void headle(int position){
+        //用翻转定律
+        similarSameCode(0,position);
+        similarSameCode(position,chain.length);
+        similarSameCode(0,chain.length);
+    }
+    private static void similarSameCode(int low,int high){
+        int somePlace = 0;
+        char temporaryStorage;//临时变量存储
+        for (int i = low;i &lt; high;i++){
+        //这边就是简单的交换值
+            temporaryStorage = chain[i];
+            chain[i] = chain[high - 1 - somePlace];
+            chain[high - 1 - somePlace] = temporaryStorage;
+            somePlace ++;
+            if (somePlace == (high -1 -low) /2 + 1){
+                break;
+            }
+        }
+    public String toString(){
+        //打印
+        boolean i = true;
+        StringBuffer sb = new StringBuffer();
+        for (char a: chain){
+            if (i) {
+                i = !i;
+                sb.append(a);
+            }
+            else {
+                sb.append(&quot; - &quot; + a);
+            }
+        }
+        String str = sb.toString();
+        return str;
+    }
+}</code></pre>]]></content>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>翻转链表</title>
+    <url>/2019/12/26/fan-zhuan-lian-biao/</url>
+    <content><![CDATA[<h2 id="链表的翻转"><a href="#链表的翻转" class="headerlink" title="链表的翻转"></a>链表的翻转</h2><p>对于链表如何执行翻转操作是数据结构的一个很基本的操作必须会的操作</p>
+<h3 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h3><p>准备好链表 line</p>
+<p>假设链表带头指针head</p>
+<h3 id="翻转操作解析"><a href="#翻转操作解析" class="headerlink" title="翻转操作解析"></a>翻转操作解析</h3><p>使用三个指针来记住位置</p>
+<p>font p last 三个工作指针 等下说明为什么要用三个指针</p>
+<p>首先需要把font赋值head.next节点</p>
+<pre><code>font = head.next</code></pre><p>思路是先把p的next指向font 由于last可以辅助记住p.next的地址</p>
+<p>所以不需要担心p后面由于next域变换而丢失</p>
+<p>这样子就逆转了一个连接</p>
+<p>接下来就开始遍历就可以了</p>
+<p>最后需要思考一下,循环在什么时候停止</p>
+<p>是p==null还是last==null呢</p>
+<p>答案自然是p==null</p>
+<p>理由是last是记住p的后继节点是作用,而p是真正的工作指针,而font是辅助记住p的前面节点位置</p>
+<p>所以当p==null为true的时候自然就说明要停止</p>
+<p>然后就把head.next赋值给font就可以了</p>
+<h3 id="具体方法代码"><a href="#具体方法代码" class="headerlink" title="具体方法代码"></a>具体方法代码</h3><pre><code> public void reverse(){
+        //起始是第一个节点
+        Node font = head.next;
+        //处理中心节点
+        Node p;
+        Node last;
+        for (p=font.next;p!=null;p=last){
+            //从第二个节点开始操作
+            if (font == head.next){
+                //把第一个节点设置为null
+                //如果不设置成null最后在遍历的时候会出现问题
+        //就会变成类似自己遍历自己的样子
+                font.next =null;
+            }
+            //事先把p.next赋给指针last
+            last = p.next;
+            //把p节点的指针域指向上一个节点
+            p.next = font;
+            //把指针下移
+            font = p;
+            //三个指针下移
+        }
+        //头指针指向最后一个节点
+        head.next = font;
+    }</code></pre><h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>感觉这个有点没说清楚 没办法表达好自己的思想</p>
+]]></content>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>自定义stack遇到的坑</title>
+    <url>/2019/12/14/zi-ding-yi-stack-yu-dao-de-keng/</url>
+    <content><![CDATA[<h2 id="什么是栈呢"><a href="#什么是栈呢" class="headerlink" title="什么是栈呢"></a>什么是栈呢</h2><p>栈是一个比较常见而且比较常用的数据结构</p>
+<p>很多语言中也有封装好的栈</p>
+<p>但是呢<br>学习嘛,难免要自己来定义一个栈,来深入的体会学习栈的FILO的特性</p>
+<h2 id="构建栈的时候遇到的困难"><a href="#构建栈的时候遇到的困难" class="headerlink" title="构建栈的时候遇到的困难"></a>构建栈的时候遇到的困难</h2><p><strong>基于java</strong></p>
+<p>我在构建栈的时候,想利用泛型来建立<br>(麻烦恰恰是由于泛型的一些特性)</p>
+<p>在泛型中,如果要在类中利用泛型参数来创建对象,是不能直接用new的</p>
+<p>那么这时候就会有人提问,那我又是怎么创建的呢??</p>
+<p>这时候就要用到java的一个特性–反射</p>
+<p>至于反射,由于近来期末考将近,我能有时间来写这个博客已经实属不易了<br>所以,等我寒假看看书总结一下,反射,这一java特性吧</p>
+<h2 id="解决代码"><a href="#解决代码" class="headerlink" title="解决代码"></a>解决代码</h2><pre><code>stacks =(T[]) Array.newInstance(Object.class,len);
+// 利用反射,先反射成一个class对象,然后再强制类型转换会T就可以了
+// 基于一个数组来建立线性栈,当然也可以建立链式栈</code></pre><p>在使用前,当然不能直接用,需要先import相关的包</p>
+<pre><code>import java.lang.reflect.Array;</code></pre><p>从import的包也可以看出来是利用反射特性</p>
+<h2 id="栈的完整代码"><a href="#栈的完整代码" class="headerlink" title="栈的完整代码"></a>栈的完整代码</h2><p>下面是构建整个栈的代码</p>
+<pre><code>import java.lang.reflect.Array;
+
+class stack&lt;T&gt;{
+    //数组类型的栈
+    private T[]stacks;
+    //栈顶的指针,主要用于isempty的判断
+    private int pointer;
+    //这些东西不能让外界随便访问,所以就把访问权限设为private
+    public stack(){
+        //默认创建一个长度是64的栈
+        this(64);
+    }
+    public stack(int len){
+        //初始化栈
+        //长度为len的T类型数组
+        stacks =(T[]) Array.newInstance(Object.class,len);
+        //刚刚开始栈里面没有任何的元素所以栈的指针是-1
+        pointer = -1;
+    }
+    public boolean isEmpty(){
+        //使用三元运算符
+        return pointer==-1?true:false;
+    }
+    public void push(T info){
+        //入栈操作
+        pointer ++;
+        stacks[pointer] = info;
+    }
+    public T peek(){
+        //查看栈顶元素
+        if (pointer == -1){
+            return null;
+        }
+        return stacks[pointer];
+    }
+    public T pop(){
+        //出栈
+        T out = stacks[pointer];
+        pointer --;
+        return out;
+    }
+}</code></pre>]]></content>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何建立一个评论系统利用gittalk</title>
+    <url>/2019/12/09/ru-he-jian-li-yi-ge-ping-lun-xi-tong-li-yong-gitalk/</url>
+    <content><![CDATA[<h1 id="基于gitalk建立博客评论功能"><a href="#基于gitalk建立博客评论功能" class="headerlink" title="基于gitalk建立博客评论功能"></a>基于gitalk建立博客评论功能</h1><p>博客建好了,万一有人想问一些操作呢?</p>
+<p>有的人可能说可以通过放在博客上的qq什么的联系到</p>
+<p>但是,自己搭一个功能,不香嘛??<br><img src="https://i.loli.net/2019/12/09/MXjEzgYdpciVG5f.png" alt=""></p>
+<p>那就记录一下怎么搭建评论功能吧</p>
+<p>别用gitment 好像有点问题<br>和我一样用gitalk就好了</p>
+<p>先去申请一个<a href="https://github.com/settings/applications/new" target="_blank" rel="noopener">OAuth</a>吧</p>
+<p>具体的这样填<br><img src="https://i.loli.net/2019/12/09/LSTwrzC39ofdnFY.png" alt=""></p>
+<p>等register好了之后,记住clientId 和clientSecret 等下有用到</p>
+<p>然后打开主题的_config.yml 找到gitalk</p>
+<p>把配置改成</p>
+<pre><code>gitalk:
+  enable: true
+  owner: *** # 自己的github昵称
+  repo: *** # 别听别人瞎说 这边就是仓库名字 不要什么http什么的
+  oauth:
+    clientId: *** # 这边就是刚刚复制的
+    clientSecret: *** # 同理
+  admin: &#39;xxx&#39; # 这边我也不知道 好像可以随便弄</code></pre><p>然后就在命令行打</p>
+<pre><code>hexo clean&amp;&amp;hexo g&amp;&amp;hexo d</code></pre><p>然后就可以看到gitalk的加载</p>
+<p>但是要登陆一下自己的github才能开启</p>
+<p>登陆完就会变成</p>
+<p><img src="https://i.loli.net/2019/12/09/KfOYprHJP4eEhT6.png" alt=""></p>
+<p>然后就可以开始用了</p>
+<p>这个功能是基于github的issue功能的</p>
+<p>还有 PicGo真好用</p>
+]]></content>
+      <tags>
+        <tag>gitalk</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>图床推荐以及PicGo的好</title>
+    <url>/2019/12/07/tu-chuang-tui-jian-yi-ji-picgo-de-hao/</url>
+    <content><![CDATA[<h2 id="图床的用处"><a href="#图床的用处" class="headerlink" title="图床的用处"></a>图床的用处</h2><p>在发布博客的时候,由于某些特性,我们需要有一个图床来获取图片的地址</p>
+<p>但是呢,我们不能每次要的时候才去找图片,然后复制图片地址吧</p>
+<p>而且最重要的一点是在国内大部分网站都是不让外链的,所以这时候就需要一个外链了</p>
+<h2 id="图床推荐"><a href="#图床推荐" class="headerlink" title="图床推荐"></a>图床推荐</h2><p>下面进入正题</p>
+<p>也许会有很多人和我一样,被贫困所压迫着,哈哈哈哈哈,很真实的大学生现象</p>
+<p>所以这时候就需要有一些免费的图床来用用</p>
+<p>比如:<br>    <a href="https://sm.ms/" target="_blank" rel="noopener">sm.ms</a><br>    <a href="https://postimages.org/" target="_blank" rel="noopener">postimages</a><br>    <a href="https://imgse.com/" target="_blank" rel="noopener">路过图床</a></p>
+<p>当然免费的也有很多,七牛云什么的</p>
+<p>以七牛云为例,大概有10G是免费的,并且提供一段时间的测试域名,但是后期就需要有一个域名来替换临时的测试域名</p>
+<p>也可以用github等途径</p>
+<p>但是免费又不用注册的不香嘛??</p>
+<h2 id="PicGo"><a href="#PicGo" class="headerlink" title="PicGo"></a>PicGo</h2><p>PicGo是一个很好的工具,这样我们以后上传图片的时候就不需要去人家网站上传了</p>
+<p>而且PicGo是一个很好用的工具,所以极力推荐啊!!</p>
+<p><a href="https://github.com/Molunerfinn/picgo/releases" target="_blank" rel="noopener">PicGo下载地址</a></p>
+<p>然后在Assets里面找到对应的安装包下载就好了</p>
+]]></content>
+      <tags>
+        <tag>图床推荐</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>markdown的基本操作</title>
+    <url>/2019/12/06/markdown-de-ji-ben-cao-zuo/</url>
+    <content><![CDATA[<blockquote>
+<p>在使用Markdown之前，你可能需要先了解一下关于markdown的简单语法。</p>
+</blockquote>
+<h3 id="1-标题"><a href="#1-标题" class="headerlink" title="1.标题"></a>1.标题</h3><ul>
+<li>使用 <code>#</code> 表示标题，一级标题使用一个 <code>#</code> ，二级标题使用两个 <code>##</code> ，以此类推，共有六级标题。</li>
+<li>使用 <code>=====</code> 表示高阶标题，使用 <code>---------</code> 表示次阶标题。</li>
+</ul>
+<ol>
+<li><code>#</code> 和标题之间记得有个空格哦。</li>
+<li><code>====</code> 和 <code>----</code> 表示标题时，大于等于2个都可以表示。</li>
+</ol>
+<h3 id="2-引用"><a href="#2-引用" class="headerlink" title="2.引用"></a>2.引用</h3><p>使用 <code>&gt;</code> 表示引用， <code>&gt;&gt;</code> 表示引用里面再套一层引用，依次类推。</p>
+<ol>
+<li>如果 <code>&gt;</code> 和 <code>&gt;&gt;</code> 嵌套使用的话，从 <code>&gt;&gt;</code> 退到 <code>&gt;</code> 时，必须之间要加一个空格或者 <code>&gt;</code> 作为过渡，否则默认为下一行和上一行是同一级别的引用。如示例所示。</li>
+<li>引用标记里可以使用其他标记，如：有序列表或无序列表标记，代码标记等。</li>
+</ol>
+<p>示例</p>
+<blockquote>
+<p>这是一级引用</p>
+<blockquote>
+<p>这是二级引用</p>
+<blockquote>
+<p>这是三级引用</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>这是一级引用</p>
+</blockquote>
+<h3 id="3-代码块"><a href="#3-代码块" class="headerlink" title="3 代码块"></a>3 代码块</h3><p>使用3个连续的` 符号包围起来表示代码块。</p>
+<ol>
+<li>本文档所有使用讲解Markdown语法标记示例的地方都是使用代码块标记的。</li>
+<li>代码块前后都得有换行哦</li>
+</ol>
+<p>示例</p>
+<pre><code>[在这输入链接标题]()$(document).ready(function() {
+$(&#39;pre code&#39;).each(function(i, block) {
+hljs.highlightBlock(block);
+});
+});
+</code></pre><h3 id="4-行内代码"><a href="#4-行内代码" class="headerlink" title="4 行内代码"></a>4 行内代码</h3><p>使用``表示行内代码。本页部分文字中间的英文字母就是使用行内代码标记标记的。</p>
+<p>示例</p>
+<p>这是 <code>javascript</code> 代码</p>
+<h4 id="5-链接"><a href="#5-链接" class="headerlink" title="5 链接"></a>5 链接</h4><p>使用 <code>[](link)</code> 表示行内链接。其中：</p>
+<ul>
+<li><code>[]</code> 内的内容为要添加链接的文字。</li>
+<li><code>link</code> 为链接地址。</li>
+</ul>
+<p>示例</p>
+<p>我觉得<a href="https://appsto.re/cn/jK8Cbb.i" target="_blank" rel="noopener">Markdown</a>真是个棒棒哒的编辑器😊.</p>
+<h3 id="6-数学公式"><a href="#6-数学公式" class="headerlink" title="6 数学公式"></a>6 数学公式</h3><p><code>$</code>包围的区块将会解析为数学公式，连续的<code>$$</code>将独占一行并居中显示</p>
+<p>示例</p>
+<p>当 $a \ne 0$, 此方程式有两个解 $ax^2 + bx + c = 0$，他们是</p>
+<p>$$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$</p>
+<h3 id="7-导入图片"><a href="#7-导入图片" class="headerlink" title="7 导入图片"></a>7 导入图片</h3><p>使用 <code>![Alt text](/path/to/img.jpg)</code> 导入图片。其中：</p>
+<ul>
+<li><code>Alt text</code> 为如果图片无法显示时显示的文字；</li>
+<li><code>/path/to/img.jpg</code> 为图片所在路径；</li>
+</ul>
+<p>点击辅助键盘中的添加图片按钮可快捷添加图片</p>
+<ol>
+<li>==本地引用==是图片直接存储到本地通过相对路径引用，无需网络连接</li>
+<li>==上传图片==将把图片上传至图床，这样在文档或图片移动时认可访问图片</li>
+</ol>
+<p>示例</p>
+<p><img src="https://i.loli.net/2019/11/16/h4lWxQbjvUwN7XZ.jpg" alt="Markdown"></p>
+<h3 id="8-Todo-List"><a href="#8-Todo-List" class="headerlink" title="8 Todo List"></a>8 Todo List</h3><p>小写x表示已完成， 空格表示未完成</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 支持数学公式</li>
+<li><input checked="" disabled="" type="checkbox"> 支持TodoList</li>
+<li><input checked="" disabled="" type="checkbox"> 支持自定义样式</li>
+<li><input disabled="" type="checkbox"> 支持自定义图床</li>
+</ul>
+<h3 id="9-粗体，斜体，高亮和删除线"><a href="#9-粗体，斜体，高亮和删除线" class="headerlink" title="9 粗体，斜体，高亮和删除线"></a>9 粗体，斜体，高亮和删除线</h3><ol>
+<li>使用 <code>**</code> 或者 <code>__</code> 表示<strong>粗体</strong>。</li>
+<li>使用 <code>*</code> 或者 <code>_</code> 表示<em>斜体</em>。</li>
+<li>使用<code>==</code>表示==高亮==</li>
+<li>使用<code>~~</code>表示<del>删除</del></li>
+<li><code>*</code>，<code>=</code> 或 <code>_</code> 的后面<strong>不要跟空格哦</strong></li>
+</ol>
+<h3 id="10-列表"><a href="#10-列表" class="headerlink" title="10 列表"></a>10 列表</h3><p>使用 <code>1. 2. 3.</code> 表示有序列表，使用 <code>*</code> 或 <code>-</code> 或 <code>+</code> 表示无序列表。</p>
+<ol>
+<li>无序列表或有序列表标记和后面的文字之间要有一个空格隔开。</li>
+<li>有序列表标记不是按照你写的数字进行显示的，而是根据当前有序列表标记所在位置显示的，如示例1所示。</li>
+<li>无序列表的项目符号是按照实心圆、空心圆、实心方格的层级关系递进的，如例2所示。通常情况下，同一层级使用同一种标记表示，便于自己查看和管理。</li>
+</ol>
+<h4 id="例1：有序列表"><a href="#例1：有序列表" class="headerlink" title="例1：有序列表"></a>例1：有序列表</h4><ol>
+<li>第一点</li>
+<li>第二点</li>
+<li>第三点</li>
+</ol>
+<h4 id="例2：无序列表"><a href="#例2：无序列表" class="headerlink" title="例2：无序列表"></a>例2：无序列表</h4><ul>
+<li>一级无序列表内容</li>
+</ul>
+<ul>
+<li>二级无序列表内容</li>
+</ul>
+<ul>
+<li>二级无序列表内容</li>
+<li>三级无序列表内容</li>
+<li>三级无序列表内容</li>
+</ul>
+<ul>
+<li>一级无序列表内容</li>
+</ul>
+<ul>
+<li>二级无序列表内容</li>
+</ul>
+<h3 id="11-分割线"><a href="#11-分割线" class="headerlink" title="11 分割线"></a>11 分割线</h3><p>使用 <code>---</code> 或者 <code>***</code> 或者 <code>* * *</code> 表示水平分割线。</p>
+<ol>
+<li>只要 <code>*</code> 或者 <code>-</code> 大于等于三个就可组成一条平行线。</li>
+<li>使用 <code>---</code> 作为水平分割线时，要在它的前后都空一行，防止 <code>---</code> 被当成标题标记的表示方式。</li>
+</ol>
+<p>示例</p>
+<hr>
+<hr>
+<hr>
+<h3 id="12表格"><a href="#12表格" class="headerlink" title="12表格"></a>12表格</h3><p>上面空一行下面空两行</p>
+<table>
+<thead>
+<tr>
+<th>Heading</th>
+<th>Heading</th>
+<th>Heading</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cell</td>
+<td>Cell</td>
+<td>Cell</td>
+</tr>
+<tr>
+<td>Cell</td>
+<td>Cell</td>
+<td>Cell</td>
+</tr>
+</tbody></table>
+<p>添加边框:</p>
+<table>
+<thead>
+<tr>
+<th>Heading</th>
+<th>Heading</th>
+<th>Heading</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cell</td>
+<td>Cell</td>
+<td>Cell</td>
+</tr>
+<tr>
+<td>Cell</td>
+<td>Cell</td>
+<td>Cell</td>
+</tr>
+</tbody></table>
+<p>对齐方式:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Heading</th>
+<th align="center">Heading</th>
+<th align="right">Heading</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Left</td>
+<td align="center">Center</td>
+<td align="right">Right</td>
+</tr>
+<tr>
+<td align="left">Left</td>
+<td align="center">Center</td>
+<td align="right">Right</td>
+</tr>
+</tbody></table>
+]]></content>
+      <tags>
+        <tag>markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何建立个人博客网站 hexo+github page</title>
+    <url>/2019/12/05/ru-he-jian-li-ge-ren-bo-ke-wang-zhan-hexo-github-page/</url>
+    <content><![CDATA[<h2 id="建立属于自己的博客网站"><a href="#建立属于自己的博客网站" class="headerlink" title="建立属于自己的博客网站"></a>建立属于自己的博客网站</h2><h3 id="基于github和hexo博客框架"><a href="#基于github和hexo博客框架" class="headerlink" title="基于github和hexo博客框架"></a>基于github和hexo博客框架</h3><p>博客在当前世界中对于程序员而言是比较有影响的<br>能长期积累发布博客并且质量比较高的话有利于自己在很多方面的发展<br>有的人选择基于现有的博客网站，有的人会想自己来创建一个</p>
+<p>在这里先跟大家说一些准备条件，有些同学可能一听到搭建博客就望而却步。弄个博客网站，不得有台服务器吗？不得搞数据库吗？不得注册域名吗？没事，如果都没有，那照样是能搭建一个博客的。</p>
+<p>GitHub 是个好东西啊，它提供了 GitHub Pages 帮助我们来架设一个静态网站，这就解决了服务器的问题。</p>
+<p>Hexo 这个博客框架没有那么重量级，它是 MarkDown 直接写文章的，然后 Hexo 可以直接将文章编译成静态网页文件并发布，所以这样文章的内容、标题、标签等信息就没必要存数据库里面了，是直接纯静态页面了，这就解决了数据库的问题。</p>
+<p>GitHub Pages 允许每个账户创建一个名为 {username}.github.io 的仓库，另外它还会自动为这个仓库分配一个 github.io 的二级域名，这就解决了域名的问题，当然如果想要自定义域名的话，也可以支持。</p>
+<p>那么如何来创建一个自己的博客站点呢<br>这里从0开始基于github和hexo博客框架建立起个人博客网站</p>
+<p>首先肯定需要有一个github的账户 如果没有就自己去建一个<a href="https://github.com" target="_blank" rel="noopener">github</a><br>hexo框架是基于nodejs的使用需要下载nodejs<a href="https://nodejs.org/dist/v12.13.1/node-v12.13.1-x64.msi" target="_blank" rel="noopener">下载</a><br>判断是否安装成功可以在cmd中输入</p>
+<pre><code>node -v</code></pre><p>以及</p>
+<pre><code>npm -v</code></pre><p>如果cmd命令行出现了版本信息那么就成功可以进行下一步 否则可能是安装步骤出错了</p>
+<p>实际上如果安装正确应该也会有一个npm的运行程序<br>但是由于国内原因可能下载速度会比较慢<br>所以这里选择去淘宝镜像站下载一个cnpm以确保下载速度能提高点<br>在cmd命令行输入</p>
+<pre><code>npm install -g cnpm —registry=https://registry.npm.taobao.org</code></pre><p><strong>注意 registry前面是两个-</strong></p>
+<h2 id="在github上创建仓库"><a href="#在github上创建仓库" class="headerlink" title="在github上创建仓库"></a>在github上创建仓库</h2><p>在整个博客搭建前需要先在GitHub上新建一个仓库，名称为 {username}.github.io，注意这个名比较特殊，必须要是 github.io 为后缀结尾的。</p>
+<p>eg：我的github昵称是oslijw 所以这个仓库名字必须是oslijw.github.io</p>
+<p>新建完成后就可以进行下一步操作</p>
+<h2 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h2><p>上面已经安装好了nodejs和cnpm</p>
+<p>下一步就可以安装hexo博客框架</p>
+<p>在cmd中输入</p>
+<pre><code>cnpm install -g hexo-cli</code></pre><p>这边实际上是安装了hexo的命令行工具</p>
+<p>安装成功后就可以开始使用好用的hexo命令</p>
+<h2 id="初始化hexo项目"><a href="#初始化hexo项目" class="headerlink" title="初始化hexo项目"></a>初始化hexo项目</h2><p>接下来就需要初始化一个hexo项目</p>
+<pre><code>hexo init {program-name}</code></pre><p>像我给我的blog项目直接命名blog所以代码是这样的：</p>
+<pre><code>hexo init blog</code></pre><p>windows下使用</p>
+<pre><code>dir</code></pre><p>就可以列出当前目录下的文件<br>这时候会发现有一些css 之类的文件</p>
+<p>跳到新建文件夹下使用</p>
+<pre><code>hexo generate</code></pre><p>这时候就能发现这些文件夹出现在oublic文件夹下</p>
+<p>接下来，激动人心的时候到了，看看项目能不能在本地跑通，在cmd输入</p>
+<pre><code>hexo s</code></pre><p><strong>其实这个s代表server 也可以认为是start 但是实际上全部都打上去是hexo server</strong></p>
+<p>然后命令行就会出现</p>
+<pre><code>INFO Start processing
+INFO Hexo is running at http://localhost:4000 . Press Ctrl+C to stop</code></pre><p>这就说明我们可以在本地的4000端口访问自己的博客网站<br>在浏览器搜索栏输入 <a href="https://localhost:4000" target="_blank" rel="noopener">https://localhost:4000</a> 就可以了</p>
+<p>所以只需要三个命令就创建好一个博客了</p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>接下来我们来将这个初始化的博客进行一下部署，放到 GitHub Pages 上面验证一下其可用性。成功之后我们可以再进行后续的修改，比如修改主题、修改页面配置等等。</p>
+<p>那么怎么把这个页面部署到 GitHub Pages 上面呢，其实 Hexo 已经给我们提供一个命令，利用它我们可以直接将博客一键部署，不需要手动去配置服务器或进行其他的各项配置。</p>
+<pre><code>hexo d</code></pre><p><strong>这个d是deploy</strong></p>
+<p>但是呢直接部署会报错吧 因为还没配置，连仓库地址都不知道 怎么部署上去呢？</p>
+<p>所以就需要修改配置文件</p>
+<p>打开根目录下的 _config.yml 文件，找到 Deployment 这个地方，把刚才新建的 Repository 的地址贴过来，然后指定分支为 master 分支，最终修改为如下内容：</p>
+<pre><code>deployment.html
+deploy:
+type: git
+repo: {git repo ssh address}
+branch: master</code></pre><p>repo那边需要加入自己git的远程地址</p>
+<p>当然这时候还是不能直接部署，真觉得改个配置文件就可以了吗？当然不行 这时候还会报错 还欠缺一个支持git部署的插件hexo-deployer-git<br>命令如下</p>
+<pre><code>cnpm install —save hexo-deployer-git</code></pre><p>安装成功后执行部署命令</p>
+<pre><code>hexo d</code></pre><p>然后就可以通过github访问<br>https://{username}.github.io<br>就可以访问了 如果能正常访问就说明部署成功 如果失败就说明可能有问题</p>
+<h2 id="一些相关配置"><a href="#一些相关配置" class="headerlink" title="一些相关配置"></a>一些相关配置</h2><p>这边就不具体展开 需要的时候再自行去查找一下配置方法，简单说明几个配置<br>主要是在-config.yml文件中进行配置</p>
+<h3 id="配置主题"><a href="#配置主题" class="headerlink" title="配置主题"></a>配置主题</h3><p>有的人可能会觉得，诶自带的主题不好看，想从网上找一些好看的主题进行配置</p>
+<p>诶，其实也是可以自行配置的步骤如下<br>首先，需要从github上找到相应的主题资源然后clone到本地</p>
+<p>例如：在hexo中比较流行的框架也就是next了，而且在一些功能上也比较完善，不然哪里能在github上有那么大的star量是吧</p>
+<p>我们的clone也是直接到github上的repository下载下来</p>
+<p>主题的 GitHub 地址是：<a href="https://github.com/theme-next/hexo-theme-next" target="_blank" rel="noopener">https://github.com/theme-next/hexo-theme-next</a> ，我们可以直接把 master 分支 Clone 下来</p>
+<pre><code>git clone https://github.com/theme-next/hexo-theme-next themes/next</code></pre><p><strong>此时命令行应该退到根目录下</strong></p>
+<p>执行完毕之后 Next 主题的源码就会出现在项目的 themes/next 文件夹下。</p>
+<p>然后我们需要修改下博客所用的主题名称，修改项目根目录下的 _config.yml 文件，找到 theme 字段，修改为 next 即可，修改如下：</p>
+<pre><code>theme：next</code></pre><p><strong>这边只是做了一个范例 也可以从GitHub上弄别的主题 操作方面也是大同小异</strong></p>
+<h2 id="配置主题样式"><a href="#配置主题样式" class="headerlink" title="配置主题样式"></a>配置主题样式</h2><p>有了主题，但是肯定也要自定义化修改一下配置吧，总不能按着人家原有的样子直接使用吧</p>
+<p>Next 主题内部也提供了一个配置文件，名字同样叫做 _config.yml，只不过位置不一样，它在 themes/next 文件夹下，Next 主题里面所有的功能都可以通过这个配置文件来控制，下文所述的内容都是修改的 themes/next/_config.yml 文件。</p>
+<h3 id="样式"><a href="#样式" class="headerlink" title="样式"></a>样式</h3><p>Next 主题还提供了多种样式，风格都是类似黑白的搭配，但整个布局位置不太一样，通过修改配置文件的 scheme 字段即可，我选了 Pisces 样式，修改 _config.yml （注意是 themes/next/_config.yml 文件）如下：</p>
+<pre><code>scheme: Pisces</code></pre><p>另外还有几个可选项，比如：<br>Muse，Mist，Pisces，Gemini</p>
+<p>可以根据自己的喜好对其进行更换</p>
+<h3 id="favicon"><a href="#favicon" class="headerlink" title="favicon"></a>favicon</h3><p>favicon 就是站点标签栏的小图标，默认是用的 Hexo 的小图标，如果我们有站点 Logo 的图片的话，我们可以自己定制小图标。</p>
+<p>但这并不意味着我们需要自己用 PS 自己来设计，已经有一个网站可以直接将图片转化为站点小图标，站点链接为：<a href="https://realfavicongenerator.net" target="_blank" rel="noopener">https://realfavicongenerator.net</a>，到这里上传一张图，便可以直接打包下载各种尺寸和适配不同设备的小图标。</p>
+<p>图标下载下来之后把它放在 themes/next/source/images 目录下面。</p>
+<p>然后在配置文件里面找到 favicon 配置项，把一些相关路径配置进去即可，示例如下：</p>
+<pre><code>favicon:
+small: /images/favicon-16x16.png
+medium: /images/favicon-32x32.png
+apple_touch_icon: /images/apple-touch-icon.png
+safari_pinned_tab: /images/safari-pinned-tab.svg</code></pre><p>然后刷新一下页面就可以看到已经改变了</p>
+<p><strong>还有一些更多的操作在这边就不一一列举了</strong></p>
+<h2 id="发布文章"><a href="#发布文章" class="headerlink" title="发布文章"></a>发布文章</h2><p>现在整个博客只有一篇文章，那么如何写文章呢？配置好了博客，当然是关注如何发布文章，不然搭建了有什么用呢？</p>
+<p>接下来，就说明一下如何发布文章</p>
+<p>调用hexo命令</p>
+<pre><code>hexo n “文章名字”</code></pre><p><strong>创建的文章会在source/_posts文件夹里面，是markdown格式的，所以需要学一下，但是也没那么难，不像html一样麻烦</strong></p>
+<p>文章也有一些必要信息可以添加</p>
+<pre><code>---
+title: 标题 # 自动创建，如 hello-world
+date: 日期 # 自动创建，如 2019-09-22 01:47:21
+tags:
+- 标签1
+- 标签2
+- 标签3
+categories:
+- 分类1
+- 分类2
+---</code></pre><p>添加信息就vans了</p>
+<p>还有一些别的信息，请查看<a href="https://hexo.io/zh-cn/docs/writing.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/writing.html</a></p>
+<p><strong>然后也可以配置一些标签页啥的，具体看看别的，或者在不久的将来，我会再次发布</strong><br>详见hexo官方文档<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/</a>以查看相关细节，这里就不一一介绍</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2019/12/04/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span></code></pre>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server</code></pre>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate</code></pre>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy</code></pre>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
+  </entry>
 </search>
