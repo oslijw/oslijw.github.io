@@ -281,6 +281,19 @@
 </header>
 
     
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = 'dbeff535ed7fa55c80612af334eb6c9fc2a0956003977a7fc461f92b009de4e5';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
 
 
 
@@ -456,10 +469,10 @@
 <p>数据科学是一个很大的领域,没有任何途径能让人简单的从一本书中了解到全部内容.</p>
 <h2 id="数据分析的有力工具–R"><a href="#数据分析的有力工具–R" class="headerlink" title="数据分析的有力工具–R"></a>数据分析的有力工具–R</h2><p>在使用R进行数据分析的时候是分阶段,分步骤进行的</p>
 <p><img src="https://i.loli.net/2020/01/24/Gs4Fj9KxgOervPX.png" alt=""></p>
-<p>数据来源(import)<br>首先需要把自己的数据导入(import)到R中,一般而言,数据存储在文件,数据库或者web API(web接口),我们需要把数据以数据框(data frame)的形式导入到R中,如果无法把数据导入到R中,那何谈数据科学呢?</p>
-<p>规整数据(tidy)<br>当我们导入数据后,而数据在收集过程中有着这样那样的问题,所以需要规整数据让数据以统一的格式存在,有利于自己对数据进行进一步的加工  比如:让每一列都是同一种变量类型,每一行都是一个观测值(observation)</p>
-<p>TVM(transform-visualize-model)<br>当规整数据后第一步通常是转化数据,而这一步包括了规范化数据(类似于数仓里面的z-score规划化,最大最小规范化,小数定标规范化等有利于提高分析的精度),基于存在的变量创建新的变量(比如通过时间和路程这两个变量,我们可以得到平均速度这个额外的变量),计算某一个统计量(计算一个集合的求和等),值得注意的是tidy和transform这两个有时会统称为wrangling(对数据进行规整处理的意思,是一个比较难直译的词=&gt;争论)<br>当有了规整后的数据和自己需要的变量后,接下来就有两个主要的知识认识的迭代过程:可视化(visualization)和建模(modeling)二者之间是互补的关系,所有的数据都需要在这二者之间迭代很多次<br>可视化是一个很基础的行为,一个好的可视化有助于自己查看自己的数据而不是依靠直觉去猜,当然可视化也有很多好处而建模则是与其互补,可以用于预测等</p>
-<p>交流(communication)<br>最后一步就是数据科学的交流了.除非能够很好的和别人交流自己分析的结果,不然自己的建模和可视化可能就是有问题的就需要改进或者重新思考</p>
+<h4 id="数据来源-import"><a href="#数据来源-import" class="headerlink" title="数据来源(import)"></a>数据来源(import)</h4><p>首先需要把自己的数据导入(import)到R中,一般而言,数据存储在文件,数据库或者web API(web接口),我们需要把数据以数据框(data frame)的形式导入到R中,如果无法把数据导入到R中,那何谈数据科学呢?</p>
+<h4 id="规整数据-tidy"><a href="#规整数据-tidy" class="headerlink" title="规整数据(tidy)"></a>规整数据(tidy)</h4><p>当我们导入数据后,而数据在收集过程中有着这样那样的问题,所以需要规整数据让数据以统一的格式存在,有利于自己对数据进行进一步的加工  比如:让每一列都是同一种变量类型,每一行都是一个观测值(observation)</p>
+<h4 id="TVM-transform-visualize-model"><a href="#TVM-transform-visualize-model" class="headerlink" title="TVM(transform-visualize-model)"></a>TVM(transform-visualize-model)</h4><p>当规整数据后第一步通常是转化数据,而这一步包括了规范化数据(类似于数仓里面的z-score规划化,最大最小规范化,小数定标规范化等有利于提高分析的精度),基于存在的变量创建新的变量(比如通过时间和路程这两个变量,我们可以得到平均速度这个额外的变量),计算某一个统计量(计算一个集合的求和等),值得注意的是tidy和transform这两个有时会统称为wrangling(对数据进行规整处理的意思,是一个比较难直译的词=&gt;争论)<br>当有了规整后的数据和自己需要的变量后,接下来就有两个主要的知识认识的迭代过程:可视化(visualization)和建模(modeling)二者之间是互补的关系,所有的数据都需要在这二者之间迭代很多次<br>可视化是一个很基础的行为,一个好的可视化有助于自己查看自己的数据而不是依靠直觉去猜,当然可视化也有很多好处而建模则是与其互补,可以用于预测等</p>
+<h4 id="交流-communication"><a href="#交流-communication" class="headerlink" title="交流(communication)"></a>交流(communication)</h4><p>最后一步就是数据科学的交流了.除非能够很好的和别人交流自己分析的结果,不然自己的建模和可视化可能就是有问题的就需要改进或者重新思考</p>
 <p>编程不是必须的,重点是在理解整个过程,但是如果会编程会有助于自己使用高效的工具进行数据分析</p>
 <p>可以在每个数据科学工程中使用这些工具,但是可能还不够,有的时候还需要使用别的一些工具.</p>
 <p>处理大量(10-100GB)的数据时可能需要用到data.table</p>
@@ -469,8 +482,10 @@
 <p>当然在安装后并不是随时准备被使用的我们需要使用library()来导入也就是import</p>
 <p><img src="https://s2.ax1x.com/2020/01/24/1ZIGAe.png" alt=""></p>
 <p>由此可见,在加载这库的时候会同时加载ggplot2,tibble,tidyr,readr,purrr,等库,同时这些库也是tidyverse的核心,我们在很多分析场合使用它们(具体的使用接下来会有所解释)<br>这里面的一些库的高性是很经常的,我们可以看到哪些更新是可用的,同时可用有选择的进行安装(使用tidyverse_update()方法)</p>
-<p>上面可以知道很多库包含在tidyverse里面<br>可是还是有一部分常用库不是tidyverse的一部分,所以需要额外的安装<br><code>Install.packages(c(&#39;nycflight13&#39;,&#39;gapminder&#39;,&#39;Lahman&#39;))</code></p>
-<p>c是一个向量的表示 这个可以批量的进行安装</p>
+<p>上面可以知道很多库包含在tidyverse里面<br>可是还是有一部分常用库不是tidyverse的一部分,所以需要额外的安装</p>
+<pre><code>    Install.packages(c(&#39;nycflight13&#39;,
+            &#39;gapminder&#39;,
+            &#39;Lahman&#39;))</code></pre><p>c是一个向量的表示 这个可以批量的进行安装</p>
 <p>这些包提供了航班数据,世界的发展数据,和棒球数据</p>
 <h2 id="冲R"><a href="#冲R" class="headerlink" title="冲R!"></a>冲R!</h2>
             </div>
@@ -724,32 +739,32 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;Current
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
             <div class="card">
-                <a href="/2020/01/24/r-for-data-science/">
+                <a href="/2020/01/27/cnki-spider-zhi-wang-pa-chong/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="R-for-data-science">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="cnki-spider-知网爬虫">
                         
-                        <span class="card-title">R-for-data-science</span>
+                        <span class="card-title">cnki-spider-知网爬虫</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            数据科学是什么数据科学是一个人们从生数据(raw data)中理解,明确以及获得知识的有趣学科
-数据科学是一个很大的领域,没有任何途径能让人简单的从一本书中了解到全部内容.
-数据分析的有力工具–R在使用R进行数据分析的时候是分阶段,分步骤进
+                            需求在当前信息量爆炸的世界中,如何高效的采集到有效的信息非常关键
+而信息采集又不得不说一下爬虫,自动化采集省的自己去一个一个复制黏贴
+然后呢,刚刚好自己有爬知网(CNKI)的一些小需求,当然就是采集一下摘要什么的做分析研究用的
+爬虫的选择说
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-01-24
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-01-27
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -758,7 +773,14 @@
                         </span>
                     </div>
                 </div>
-
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%88%AC%E8%99%AB/">
+                        <span class="chip bg-color">爬虫</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>
@@ -992,7 +1014,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">7.8k</span>&nbsp;字
+                class="white-color">9.9k</span>&nbsp;字
             
             
             

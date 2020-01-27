@@ -4,12 +4,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="如何建立一个评论系统利用gittalk, Python,R,Java,算法,数据挖掘,机器学习">
-    <meta name="description" content="基于gitalk建立博客评论功能博客建好了,万一有人想问一些操作呢?
-有的人可能说可以通过放在博客上的qq什么的联系到
-但是,自己搭一个功能,不香嘛??
-那就记录一下怎么搭建评论功能吧
-别用gitment 好像有点问题和我一样用gitalk">
+    <meta name="keywords" content="cnki-spider-知网爬虫, Python,R,Java,算法,数据挖掘,机器学习">
+    <meta name="description" content="需求在当前信息量爆炸的世界中,如何高效的采集到有效的信息非常关键
+而信息采集又不得不说一下爬虫,自动化采集省的自己去一个一个复制黏贴
+然后呢,刚刚好自己有爬知网(CNKI)的一些小需求,当然就是采集一下摘要什么的做分析研究用的
+爬虫的选择说">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +16,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>如何建立一个评论系统利用gittalk | oslijw</title>
+    <title>cnki-spider-知网爬虫 | oslijw</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -286,7 +285,7 @@
 <script src="/libs/cryptojs/crypto-js.min.js"></script>
 <script>
     (function() {
-        let pwd = '';
+        let pwd = 'dbeff535ed7fa55c80612af334eb6c9fc2a0956003977a7fc461f92b009de4e5';
         if (pwd && pwd.length > 0) {
             if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
                 alert('密码错误，将返回主页！');
@@ -299,13 +298,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        如何建立一个评论系统利用gittalk
+                        cnki-spider-知网爬虫
                     </div>
                 </div>
             </div>
@@ -423,8 +422,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/gitalk/">
-                                <span class="chip bg-color">gitalk</span>
+                            <a href="/tags/%E7%88%AC%E8%99%AB/">
+                                <span class="chip bg-color">爬虫</span>
                             </a>
                         
                     </div>
@@ -439,7 +438,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2019-12-09
+                    2020-01-27
                 </div>
                 
 
@@ -448,14 +447,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    284
+                    2.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    1 Min
+                    11 Min
                 </div>
                 
 				
@@ -471,32 +470,290 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="基于gitalk建立博客评论功能"><a href="#基于gitalk建立博客评论功能" class="headerlink" title="基于gitalk建立博客评论功能"></a>基于gitalk建立博客评论功能</h1><p>博客建好了,万一有人想问一些操作呢?</p>
-<p>有的人可能说可以通过放在博客上的qq什么的联系到</p>
-<p>但是,自己搭一个功能,不香嘛??<br><img src="https://i.loli.net/2019/12/09/MXjEzgYdpciVG5f.png" alt=""></p>
-<p>那就记录一下怎么搭建评论功能吧</p>
-<p>别用gitment 好像有点问题<br>和我一样用gitalk就好了</p>
-<p>先去申请一个<a href="https://github.com/settings/applications/new" target="_blank" rel="noopener">OAuth</a>吧</p>
-<p>具体的这样填<br><img src="https://i.loli.net/2019/12/09/LSTwrzC39ofdnFY.png" alt=""></p>
-<p>等register好了之后,记住clientId 和clientSecret 等下有用到</p>
-<p>然后打开主题的_config.yml 找到gitalk</p>
-<p>把配置改成</p>
-<pre><code>gitalk:
-  enable: true
-  owner: *** # 自己的github昵称
-  repo: *** # 别听别人瞎说 这边就是仓库名字 不要什么http什么的
-  oauth:
-    clientId: *** # 这边就是刚刚复制的
-    clientSecret: *** # 同理
-  admin: &#39;xxx&#39; # 这边我也不知道 好像可以随便弄</code></pre><p>然后就在命令行打</p>
-<pre><code>hexo clean&amp;&amp;hexo g&amp;&amp;hexo d</code></pre><p>然后就可以看到gitalk的加载</p>
-<p>但是要登陆一下自己的github才能开启</p>
-<p>登陆完就会变成</p>
-<p><img src="https://i.loli.net/2019/12/09/KfOYprHJP4eEhT6.png" alt=""></p>
-<p>然后就可以开始用了</p>
-<p>这个功能是基于github的issue功能的</p>
-<p>还有 PicGo真好用</p>
+                <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>在当前信息量爆炸的世界中,如何高效的采集到有效的信息非常关键</p>
+<p>而信息采集又不得不说一下爬虫,自动化采集省的自己去一个一个复制黏贴</p>
+<p>然后呢,刚刚好自己有爬知网(CNKI)的一些小需求,当然就是采集一下摘要什么的做分析研究用的</p>
+<h2 id="爬虫的选择"><a href="#爬虫的选择" class="headerlink" title="爬虫的选择"></a>爬虫的选择</h2><p>说到爬虫,很多人第一念头可能就是Python了,当然我也是用python进行开发</p>
+<p>记录一下自己爬知网的一些心得</p>
+<h2 id="事前准备"><a href="#事前准备" class="headerlink" title="事前准备"></a>事前准备</h2><p>下载python3.6 安装好requests,lxml等必要库</p>
+<h2 id="爬取步骤"><a href="#爬取步骤" class="headerlink" title="爬取步骤"></a>爬取步骤</h2><p>先抓包,抓到详情页的数据包,然后访问看看源码里面是否有对应需要的信息</p>
+<p>emmm假设这一步懂怎么抓包</p>
+<p>接下来就可以开始准备代码的编写</p>
+<h3 id="先导入必要的包"><a href="#先导入必要的包" class="headerlink" title="先导入必要的包"></a>先导入必要的包</h3><pre><code>#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# author : oslijw
+import requests
+import re
+from bs4 import BeautifulSoup as bs
+import time
+import random
+import csv
+import lxml
+from lxml import etree</code></pre><h3 id="获取网页源代码"><a href="#获取网页源代码" class="headerlink" title="获取网页源代码"></a>获取网页源代码</h3><p>实际上,需要封装起来,不然到时候改个代码也麻烦</p>
+<pre><code># 获得网页源码
+def get_page_thing(url):
+    uapools = [
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134&quot;,
+    ]
+    page_ua = random.choice(uapools)
+    page_cookies = random.choice(cookies_list)
+    headers = {
+        &quot;User_Agent&quot;: page_ua,
+        &quot;Cookie&quot;: page_cookies,
+    }
+    try:
+        response = requests.get(url,headers = headers,timeout = 3)
+        response.raise_for_status()
+        response.encoding = &#39;utf8&#39;# response.apparent_encoding
+    except Exception as err:
+        print(&quot;出现了异常情况,异常情况是 : &quot; + str(err))
+        time.sleep(3*random.random())
+    return response.text</code></pre><h3 id="使用xpath进行提取"><a href="#使用xpath进行提取" class="headerlink" title="使用xpath进行提取"></a>使用xpath进行提取</h3><pre><code># 使用xpath进行提取并且保存
+def paser_html(response_text):
+        tree = etree.HTML(response_text)
+        for i in range(2, 52, 1):
+            a_recording = []
+            detail_url = tree.xpath(&quot;//tr[&quot; + str(i) + &quot;]//a[@class=&#39;fz14&#39;]/@href&quot;)
+            fn = re.compile(&quot;FileName=(.*?)&amp;&quot;).findall(detail_url[0])
+            dn = re.compile(&quot;DbName=(.*?)&amp;&quot;).findall(detail_url[0])
+            dc = re.compile(&quot;DbCode=(.*?)&amp;&quot;).findall(detail_url[0])
+            detail_url = &quot;https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode={}&amp;dbname={}&amp;filename={}&quot;.format(dc[0],
+                                                                                                               dn[0],
+                                                                                                               fn[0])
+            a_recording.append(detail_url)
+            store_url(detail_url)
+            title_keyword_summary = get_title_key_word_summary(paser_detail(detail_url))
+            a_recording = a_recording + title_keyword_summary
+            for j in range(3, 5, 1):
+                title_author_unit = tree.xpath(
+                    &#39;//table[@class=&quot;GridTableContent&quot;]//tr[&#39; + str(i) + &#39;]/td[&#39; + str(j) + &#39;]/a/text()&#39;)
+                if len(title_author_unit) == 1:
+                    a = &quot;&quot;.join(title_author_unit)
+                else:
+                    a = &quot;;&quot;.join(title_author_unit)
+                a_recording.append(a)
+            if True:
+                time_database = tree.xpath(
+                    &quot;//table[@class=&#39;GridTableContent&#39;]//tr[&quot; + str(i) + &quot;]/td[@align=&#39;center&#39;]/text()&quot;)
+                reference = tree.xpath(&quot;//table//tr[&quot; + str(i) + &quot;]/td[7]/span[@class=&#39;KnowledgeNetcont&#39;]//text()&quot;)
+                download = tree.xpath(&quot;//table//tr[&quot; + str(i) + &quot;]/td[8]/span[@class=&#39;downloadCount&#39;]//text()&quot;)
+                if len(reference)!=0:
+                    ref = reference[0].strip()
+                else:
+                    ref = &#39;-&#39;
+                if len(download) != 0:
+                    down = download[0].strip()
+                else:
+                    down = &#39;-&#39;
+                atr_time = time_database[0].strip()  # [a_tuple.strip() for a_tuple in time_database[0]]
+                database = time_database[1].strip()  # [b_tuple.strip() for b_tuple in time_database[1]]
+                a_recording.append(atr_time)
+                a_recording.append(database)
+                a_recording.append(down)
+                a_recording.append(ref)
+            print(a_recording)
+            print()
+            store_into_csv(a_recording)
+        print(&quot;store into csv_file&quot;)
+</code></pre><h3 id="存储模块"><a href="#存储模块" class="headerlink" title="存储模块"></a>存储模块</h3><p>有的人可能看了上面,就会疑问哪里来的store_into_csv的方法</p>
+<p>这不看着名字就应该知道是存储模块了</p>
+<pre><code># 使得每个文献的数据起码能包含在一个列表中存储到csv
+def store_into_csv(a_recording):
+    with open(r&#39;C:\Users\oslijw\Desktop\cnki_spider1.csv&#39;, &#39;a&#39;, newline=&#39;&#39;, encoding=&#39;utf-8-sig&#39;) as out:
+        csv_write = csv.writer(out, dialect=&#39;excel&#39;)
+        csv_write.writerow(a_recording)</code></pre><h3 id="提取详情页的一些信息"><a href="#提取详情页的一些信息" class="headerlink" title="提取详情页的一些信息"></a>提取详情页的一些信息</h3><pre><code># 获得详情页的标题,关键词,摘要
+def get_title_key_word_summary(text):
+    tree = etree.HTML(text)
+    return_value = []
+    key_word = tree.xpath(&quot;//label[@id=&#39;catalog_KEYWORD&#39;]/../a/text()&quot;)
+    key_word = &quot;&quot;.join([aword.strip() for aword in key_word])
+    if len(tree.xpath(&quot;//h2[@class=&#39;title&#39;]/text()&quot;))!=0:
+        return_value.append(tree.xpath(&quot;//h2[@class=&#39;title&#39;]/text()&quot;)[0])
+    else:
+        return_value.append(&#39;-&#39;)
+    return_value.append(key_word)
+    if len(tree.xpath(&quot;//span[@id=&#39;ChDivSummary&#39;]/text()&quot;))!=0:
+        return_value.append(tree.xpath(&quot;//span[@id=&#39;ChDivSummary&#39;]/text()&quot;)[0])
+    else:
+        return_value.append(&#39;-&#39;)
+    return return_value</code></pre><h3 id="爬取摘要"><a href="#爬取摘要" class="headerlink" title="爬取摘要"></a>爬取摘要</h3><p>在详情页上面呢,摘要是不全的</p>
+<p>所以需要爬取详情页</p>
+<pre><code># 爬取详情页中的一些信息
+def paser_detail(url):
+    uapools = [
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134&quot;,
+    ]
+    page_ua = random.choice(uapools)
+    headers = {
+        &quot;User_Agent&quot;: page_ua,
+    }
+    try:
+        response = requests.get(url, headers=headers, timeout=3)
+        response.raise_for_status()
+        response.encoding = &#39;utf8&#39;  # response.apparent_encoding
+    except Exception as err:
+        print(&quot;出现了异常情况,异常情况是 : &quot; + str(err))
+        time.sleep(3 * random.random())
+    return response.text</code></pre><h1 id="主方法"><a href="#主方法" class="headerlink" title="主方法"></a>主方法</h1><p>最后根据习惯写一个主方法就可以了</p>
+<h3 id="最重要的一点"><a href="#最重要的一点" class="headerlink" title="最重要的一点"></a>最重要的一点</h3><p>知网有一些反爬手段</p>
+<p>需要传入cookies才可以</p>
+<pre><code>cookies_list = [
+    ]
+    # 这边的cookies 需要是详情页的cookies,会过期
+</code></pre><h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><pre><code>#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# author : oslijw
+import requests
+import re
+from bs4 import BeautifulSoup as bs
+import time
+import random
+import csv
+import lxml
+from lxml import etree
+# cookies列表需要替换
+cookies_list = [
+    # 需要换掉知网的反爬这边只有涉及cookies
+    ]
+# 获得网页源码
+def get_page_thing(url):
+    uapools = [
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134&quot;,
+    ]
+    page_ua = random.choice(uapools)
+    page_cookies = random.choice(cookies_list)
+    headers = {
+        &quot;User_Agent&quot;: page_ua,
+        &quot;Cookie&quot;: page_cookies,
+    }
+    try:
+        response = requests.get(url,headers = headers,timeout = 3)
+        response.raise_for_status()
+        response.encoding = &#39;utf8&#39;# response.apparent_encoding
+    except Exception as err:
+        print(&quot;出现了异常情况,异常情况是 : &quot; + str(err))
+        time.sleep(3*random.random())
+    return response.text
 
+# 使用xpath进行提取并且保存
+def paser_html(response_text):
+        tree = etree.HTML(response_text)
+        for i in range(2, 52, 1):
+            a_recording = []
+            detail_url = tree.xpath(&quot;//tr[&quot; + str(i) + &quot;]//a[@class=&#39;fz14&#39;]/@href&quot;)
+            fn = re.compile(&quot;FileName=(.*?)&amp;&quot;).findall(detail_url[0])
+            dn = re.compile(&quot;DbName=(.*?)&amp;&quot;).findall(detail_url[0])
+            dc = re.compile(&quot;DbCode=(.*?)&amp;&quot;).findall(detail_url[0])
+            detail_url = &quot;https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode={}&amp;dbname={}&amp;filename={}&quot;.format(dc[0],
+                                                                                                               dn[0],
+                                                                                                               fn[0])
+            # 构造出具体链接的url由于概括页部分信息缺失
+        a_recording.append(detail_url)
+            store_url(detail_url)
+            title_keyword_summary = get_title_key_word_summary(paser_detail(detail_url))
+            a_recording = a_recording + title_keyword_summary
+            for j in range(3, 5, 1):
+                title_author_unit = tree.xpath(
+                    &#39;//table[@class=&quot;GridTableContent&quot;]//tr[&#39; + str(i) + &#39;]/td[&#39; + str(j) + &#39;]/a/text()&#39;)
+                if len(title_author_unit) == 1:
+                    a = &quot;&quot;.join(title_author_unit)
+                else:
+                    a = &quot;;&quot;.join(title_author_unit)
+                a_recording.append(a)
+            if True:
+                time_database = tree.xpath(
+                    &quot;//table[@class=&#39;GridTableContent&#39;]//tr[&quot; + str(i) + &quot;]/td[@align=&#39;center&#39;]/text()&quot;)
+                reference = tree.xpath(&quot;//table//tr[&quot; + str(i) + &quot;]/td[7]/span[@class=&#39;KnowledgeNetcont&#39;]//text()&quot;)
+                download = tree.xpath(&quot;//table//tr[&quot; + str(i) + &quot;]/td[8]/span[@class=&#39;downloadCount&#39;]//text()&quot;)
+                if len(reference)!=0:
+                    ref = reference[0].strip()
+                else:
+                    ref = &#39;-&#39;
+                if len(download) != 0:
+                    down = download[0].strip()
+                else:
+                    down = &#39;-&#39;
+                atr_time = time_database[0].strip()  # [a_tuple.strip() for a_tuple in time_database[0]]
+                database = time_database[1].strip()  # [b_tuple.strip() for b_tuple in time_database[1]]
+                a_recording.append(atr_time)
+                a_recording.append(database)
+                a_recording.append(down)
+                a_recording.append(ref)
+            print(a_recording)
+            print()
+            store_into_csv(a_recording)
+        print(&quot;store into csv_file&quot;)
+
+# 爬取详情页中的一些信息
+def paser_detail(url):
+    uapools = [
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36&quot;,
+        &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134&quot;,
+    ]
+    page_ua = random.choice(uapools)
+    headers = {
+        &quot;User_Agent&quot;: page_ua,
+    }
+    try:
+        response = requests.get(url, headers=headers, timeout=3)
+        response.raise_for_status()
+        response.encoding = &#39;utf8&#39;  # response.apparent_encoding
+    except Exception as err:
+        print(&quot;出现了异常情况,异常情况是 : &quot; + str(err))
+        time.sleep(3 * random.random())
+    return response.text
+
+# 获得详情页的标题,关键词,摘要
+def get_title_key_word_summary(text):
+    tree = etree.HTML(text)
+    return_value = []
+    key_word = tree.xpath(&quot;//label[@id=&#39;catalog_KEYWORD&#39;]/../a/text()&quot;)
+    key_word = &quot;&quot;.join([aword.strip() for aword in key_word])
+    if len(tree.xpath(&quot;//h2[@class=&#39;title&#39;]/text()&quot;))!=0:
+        return_value.append(tree.xpath(&quot;//h2[@class=&#39;title&#39;]/text()&quot;)[0])
+    else:
+        return_value.append(&#39;-&#39;)
+    return_value.append(key_word)
+    if len(tree.xpath(&quot;//span[@id=&#39;ChDivSummary&#39;]/text()&quot;))!=0:
+        return_value.append(tree.xpath(&quot;//span[@id=&#39;ChDivSummary&#39;]/text()&quot;)[0])
+    else:
+        return_value.append(&#39;-&#39;)
+    return return_value
+
+# 把url存储到本地
+def store_url(url):
+    with open(r&#39;detail_url.text&#39;,&#39;a&#39;) as file:
+        file.write(url+&quot;\n&quot;)
+
+# 使得每个文献的数据起码能包含在一个列表中存储到csv
+def store_into_csv(a_recording):
+    with open(r&#39;C:\Users\oslijw\Desktop\cnki_spider1.csv&#39;, &#39;a&#39;, newline=&#39;&#39;, encoding=&#39;utf-8-sig&#39;) as out:
+        csv_write = csv.writer(out, dialect=&#39;excel&#39;)
+        csv_write.writerow(a_recording)
+
+# 主方法的入口,传入数来爬取相应的详情页
+def main(count):
+    if count == 1:
+        url = # 自己抓包 把接口抓到
+    else:
+        url = # 根据接口的url构造逻辑来实现翻页
+    print(&quot;----------------------------------------------------&quot;)
+    print(url)
+    print(&quot;----------------------------------------------------&quot;)
+    response = get_page_thing(url)
+    paser_html(response)
+
+if __name__ == &#39;__main__&#39;:
+    for count in range(1,120,1):# 1-121
+        print(&quot;crawl page&quot; + str(count))
+        main(count)</code></pre>
             </div>
             <hr/>
 
@@ -521,7 +778,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://oslijw.github.io/2019/12/09/ru-he-jian-li-yi-ge-ping-lun-xi-tong-li-yong-gitalk/">https://oslijw.github.io/2019/12/09/ru-he-jian-li-yi-ge-ping-lun-xi-tong-li-yong-gitalk/</a>
+                    <a href="https://oslijw.github.io/2020/01/27/cnki-spider-zhi-wang-pa-chong/">https://oslijw.github.io/2020/01/27/cnki-spider-zhi-wang-pa-chong/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -559,8 +816,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/gitalk/">
-                                    <span class="chip bg-color">gitalk</span>
+                                <a href="/tags/%E7%88%AC%E8%99%AB/">
+                                    <span class="chip bg-color">爬虫</span>
                                 </a>
                             
                         </div>
@@ -731,7 +988,7 @@
         repo: 'oslijw.github.io',
         owner: 'oslijw',
         admin: "oslijw",
-        id: '2019-12-09T22-44-54',
+        id: '2020-01-27T18-50-54',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -752,33 +1009,33 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
             <div class="card">
-                <a href="/2019/12/14/zi-ding-yi-stack-yu-dao-de-keng/">
+                <a href="/2020/01/27/cnki-spider-zhi-wang-pa-chong/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="自定义stack遇到的坑">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="cnki-spider-知网爬虫">
                         
-                        <span class="card-title">自定义stack遇到的坑</span>
+                        <span class="card-title">cnki-spider-知网爬虫</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            什么是栈呢栈是一个比较常见而且比较常用的数据结构
-很多语言中也有封装好的栈
-但是呢学习嘛,难免要自己来定义一个栈,来深入的体会学习栈的FILO的特性
-构建栈的时候遇到的困难基于java
-我在构建栈的时候,想利用泛型来建立(麻烦恰恰是由于泛型
+                            需求在当前信息量爆炸的世界中,如何高效的采集到有效的信息非常关键
+而信息采集又不得不说一下爬虫,自动化采集省的自己去一个一个复制黏贴
+然后呢,刚刚好自己有爬知网(CNKI)的一些小需求,当然就是采集一下摘要什么的做分析研究用的
+爬虫的选择说
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2019-12-14
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-01-27
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -787,11 +1044,12 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E7%AE%97%E6%B3%95/">
-                        <span class="chip bg-color">算法</span>
+                    <a href="/tags/%E7%88%AC%E8%99%AB/">
+                        <span class="chip bg-color">爬虫</span>
                     </a>
                     
                 </div>
@@ -805,28 +1063,26 @@
                 Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/12/07/tu-chuang-tui-jian-yi-ji-picgo-de-hao/">
+                <a href="/2020/01/24/r-for-data-science/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="图床推荐以及PicGo的好">
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="R-for-data-science">
                         
-                        <span class="card-title">图床推荐以及PicGo的好</span>
+                        <span class="card-title">R-for-data-science</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            图床的用处在发布博客的时候,由于某些特性,我们需要有一个图床来获取图片的地址
-但是呢,我们不能每次要的时候才去找图片,然后复制图片地址吧
-而且最重要的一点是在国内大部分网站都是不让外链的,所以这时候就需要一个外链了
-图床推荐下面进入正题
-也
+                            数据科学是什么数据科学是一个人们从生数据(raw data)中理解,明确以及获得知识的有趣学科
+数据科学是一个很大的领域,没有任何途径能让人简单的从一本书中了解到全部内容.
+数据分析的有力工具–R在使用R进行数据分析的时候是分阶段,分步骤进
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2019-12-07
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-01-24
                             </span>
                         <span class="publish-author">
                             
@@ -835,14 +1091,6 @@
                             
                         </span>
                     </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E5%9B%BE%E5%BA%8A%E6%8E%A8%E8%8D%90/">
-                        <span class="chip bg-color">图床推荐</span>
-                    </a>
-                    
                 </div>
                 
             </div>

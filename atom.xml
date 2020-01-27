@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://oslijw.github.io/"/>
-  <updated>2020-01-24T15:12:10.819Z</updated>
+  <updated>2020-01-27T10:51:27.125Z</updated>
   <id>https://oslijw.github.io/</id>
   
   <author>
@@ -17,11 +17,36 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>cnki-spider-知网爬虫</title>
+    <link href="https://oslijw.github.io/2020/01/27/cnki-spider-zhi-wang-pa-chong/"/>
+    <id>https://oslijw.github.io/2020/01/27/cnki-spider-zhi-wang-pa-chong/</id>
+    <published>2020-01-27T10:50:54.000Z</published>
+    <updated>2020-01-27T10:51:27.125Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;需求&quot;&gt;&lt;a href=&quot;#需求&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="爬虫" scheme="https://oslijw.github.io/tags/%E7%88%AC%E8%99%AB/"/>
+    
+  </entry>
+  
+  <entry>
     <title>R-for-data-science</title>
     <link href="https://oslijw.github.io/2020/01/24/r-for-data-science/"/>
     <id>https://oslijw.github.io/2020/01/24/r-for-data-science/</id>
     <published>2020-01-24T14:51:29.000Z</published>
-    <updated>2020-01-24T15:12:10.819Z</updated>
+    <updated>2020-01-27T10:54:35.947Z</updated>
     
     <summary type="html">
     
