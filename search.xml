@@ -1,6 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>R-for-data-science-ggplot2(1)</title>
+    <url>/2020/01/30/r-for-data-science-ggplot2-1/</url>
+    <content><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>The simple graph has brought more information to the data analyst’s mind than any other device.<br>                            —John Tukey</p>
+<p>这句话很简单的说明了可视化的作用,一个简单的可视化有助于掌握更加深层次的一些信息,可以让我们对数据有一个初步的认识,当然如果要深入理解数据需要对数据进行更加复杂的分析和挖掘操作</p>
+<p>R有多种不同的可视化库,但是相较而言,R的<strong>ggplot2</strong>库是比较流行的</p>
+<p>如果希望学到更多关于ggplot2的知识,可以访问并下载<a href="http://vita.had.co.nz/papers/layered-grammar.pdf" target="_blank" rel="noopener">“A Layered Grammar of Graphics”</a></p>
+<h3 id="事前准备"><a href="#事前准备" class="headerlink" title="事前准备"></a>事前准备</h3><p>事先当然是需要准备好把对应的库下载到本地,不过在ggplot2是tidyverse中的主要组成部分,所以在前言部分已经安装好了对应的库就不需要再次调用<code>install.packages(&#39;library_name&#39;)</code>来安装ggplot2了</p>
+<p>不过我们需要把tidyverse导入到我们的项目中<br><code>library(tidyverse)</code></p>
+<p>如果在导入的时候报错了,比如报错<code>“there is no package called &#39;tidyverse&#39;”</code>.显而易见是因为没有对应的库存在需要安装后再导入<em>(详见前言的安装)</em></p>
+<p>当我们需要准确的了解一个方法(或者数据集)我们使用<code>package::function()</code>来查看(对于数据集的话可以使用<code>package::dataset</code>来查看)</p>
+<p>For example,ggplot2::ggplot() tells you explicitly that we’re using the ggplot() function from the ggplot2 package</p>
+<h4 id="第一步–问题"><a href="#第一步–问题" class="headerlink" title="第一步–问题"></a>第一步–问题</h4><p>学习过程实际上是解决一个又一个问题的过程,让我们开始使用ggplot2回答这样一个问题:<br>1.高能引擎的车对燃料的需求是否大于低能引擎的车?在提出这个问题的时候,可能自己心里已经有了一个答案,但是回答应该是准确的,而不是自己的主观臆测,<br>2.引擎规格和燃料效率有什么关系?积极的?消极的?线性的?无关的?</p>
+<p>这些问题都需要通过一些图来展示</p>
+<h4 id="The-mpg-Data-Frame"><a href="#The-mpg-Data-Frame" class="headerlink" title="The mpg Data Frame"></a>The mpg Data Frame</h4><p>我们可以试着用mpg这个数据框(包含在ggplot2中)来回答以上的问题</p>
+<p>想更加深入的了解这个数据库请自行输入<code>ggplot2::mpg</code></p>
+<p>一个数据框中通常列是变量,行是观测值</p>
+<p>mog中的数据是收集之美国美国环境保护署(US Environment Protection Agency)的38辆测试车的数据</p>
+<p>输入<code>mpg</code>就可以查看数据框的数据</p>
+<p>可以看到里面有两个变量displ和hwy<br>displ是车的引擎规格的变量,以升为单位<br>hwy是车的功耗(燃料的消耗效率)</p>
+<p>如果想了解更多关于mpg的信息<br>输入<code>?mpg</code>或者 <code>help mpg</code>都可以获得对应的文档<br>注:该方法具有普适性</p>
+<h4 id="创建ggplot2"><a href="#创建ggplot2" class="headerlink" title="创建ggplot2"></a>创建ggplot2</h4><p>为了画出来mpg对应的图解决上面的可视化问题<br>把<code>ggplot(data = mpg) + geom_point(mapping = aes(x = displ,y = hwy))</code>运行就可以得到<a href="https://postimg.cc/t7trw3Nz" target="_blank" rel="noopener"><img src="https://i.postimg.cc/xjBWkgkB/image.png" alt="image.png"></a></p>
+<p>在图中,我们可以得到这样的一个信息:<br>The plot shows a negative relationship between engine size (displ) and fuel efficiency (hwy). In other words, cars with big engines use more fuel.<br>这是否证实或驳斥了您关于燃油效率和发动机尺寸的假设</p>
+<p>在ggplot2中,我们画一个图起始于ggplot()方法,这个方法可以创建一个坐标系以便于操作,其中最主要的参数就是data用于指定该图所使用的数据集,所以<code>ggplot(data = mpg)</code>实际上就是创建了一个基于mpg数据集的空的图像便于展示</p>
+<p>接下来就需要进一步选择对应的展示变量出来我们可以调用geom_point()方法来添加变量,这个方法可以绘制出来一个散点图,如上图所示.</p>
+<p>实际上ggplot2中有很多几何(geom)的方法,需要看情况进行筛选和使用<br>但是大同小异每个geom function都有mapping这个参数.这个参数确定了把数据集中的什么变量映射到坐标系上展示.这个参数通常是和aes()方法进行配对(paired)其中的aes()的x,y属性指定了映射到坐标系x_aes和y_aes的数据</p>
+<h4 id="A-Grapging-Template-画图模板"><a href="#A-Grapging-Template-画图模板" class="headerlink" title="A Grapging Template(画图模板)"></a>A Grapging Template(画图模板)</h4><p>以上说了那么多,归结于一句话,ggplot2中的方法是有一定模板的,在绘图的时候只需要替换掉其中的参数部分就可以以较少的代码来展示数据集,几何方法以及数据集的映射关系:       <code>gplot(data = &lt;DATA&gt;) +  &lt;GEOM_FUNCTION&gt;(mapping = aes(&lt;MAPPING&gt;))</code></p>
+<h4 id="Aesthetic-Mappings"><a href="#Aesthetic-Mappings" class="headerlink" title="Aesthetic Mappings"></a>Aesthetic Mappings</h4><p>The greatest value of a picture is when it forces us to notice what we never expected to see.<br>                                    —John Tukey</p>
+<p>大概的意思就是一个图片中最有价值的部分是在我们看图片的时候能够让我们注意到一些我们没想到的内容,这大致也就是可视化的核心要义了.</p>
+<p><a href="https://postimg.cc/1fqVd5cG" target="_blank" rel="noopener"><img src="https://i.postimg.cc/65HVy88m/image.png" alt="image.png"></a><br>在上图中,有一组点(红点)偏离出预测的的线性趋势,这些车的里程数(燃料利用率)仿佛比预测的更多一些</p>
+<p>那么试想我们应该怎么去解释这些点呢</p>
+<p>假设(hypothesize)这样一个情况:这些车是混合动力车<br>而验证这样一个假设需要看每辆车的另外一个参数:类别(class) 整个变量也在mpg的统计中,有SUV等类别</p>
+<p>如果这些离群点是混合动力车,那么这些车应该有别于普通单一动力车型</p>
+<p>当然也可以添加第三个变量,比如class变量,基于二维分布并且通过映射来进一步的说明这些情况<br>An aesthetic is a visual property of the objects in your plot.<br>它可以用尺寸,形状,映射等来进一步的说明点,也可以通过一些别的方法来展示</p>
+<p>假设需要在绘制的图中通过颜色来表示每个观测值的class值可以运行<code>ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy, color = class))</code>就可以得到下图<br><img src="https://s2.ax1x.com/2020/01/30/1lThjS.png" alt="1lThjS.png"><br>注: 如果自己更加偏向于英式英语,也可以用colour来代替color</p>
+<p>由上可知,为了更加细化的刻画其数据集,我们可以在aes()方法中增加更多的参数<br>在上述案例中,ggplot2会自动分配应该独立的类别(这边是分配不同的颜色)给每个指定变量的不同值(基数)<br>当然也有可以用size,shape,alpha等来说明</p>
+<p>在使用shape的时候,值得注意的一点是ggplot2只会分配同时分配六种不同形状,所以由于class的种类有7种,所以ggplot2默认把一种去掉了<br>在使用<code>ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy, shape = class))</code>的时候</p>
+<p>出现了这样的一个Warning<code>Warning messages:
+1: The shape palette can deal with a maximum of 6
+discrete values because more than 6 becomes difficult
+to discriminate; you have 7. Consider specifying
+shapes manually if you must have them. 
+2: Removed 62 rows containing missing values (geom_point).</code><br><img src="https://s2.ax1x.com/2020/01/30/1lbQ6f.png" alt="1lbQ6f.png"><br>在图中可以很明显注意到这一点</p>
+<p>在上面在aes()中添加了color参数,试想同样把color作为geom_point()的参数会怎么样<br><img src="https://s2.ax1x.com/2020/01/30/1lbs74.png" alt="1lbs74.png"><br>如图所示,这个参数变成了普遍性的参数,每个点颜色都变成一样的</p>
+<h4 id="Common-Problems"><a href="#Common-Problems" class="headerlink" title="Common Problems"></a>Common Problems</h4><p>在初次使用的时候可能会遇到很多问题,当然不需要担心,问题可能会发生在每个人身上,多积累经验就不会写出错误的代码了</p>
+<p>当对一个方法产生疑惑的时候,可以使用<code>?function_name</code>或者<code>help function_name</code>来获得对应的帮助</p>
+<h4 id="Facets"><a href="#Facets" class="headerlink" title="Facets"></a>Facets</h4><p>以上是添加第三种变量的一种方法,而我们也可以通过其他方法来增加变量,比如把自己的图分解成多个子图(Facets)</p>
+<h5 id="facet-weap-针对单变量"><a href="#facet-weap-针对单变量" class="headerlink" title="facet_weap() 针对单变量"></a>facet_weap() 针对单变量</h5><p>为了按照单一的变量对图进行分解,我们需要用到facet_wrap()方法<br>这个方法的第一个参数是一个公式(formula)用~来创建,后面跟着变量名字</p>
+<p>The variable that you pass to facet_wrap() should be discrete.<br>指出我们跟随着的变量应该是离散的</p>
+<p>示例如下:<code>ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy)) + facet_wrap(~class, nrow = 2)</code></p>
+<p>其中nrow是表示分解后子图的行数,由此类推,可以得到ncol也是差不多的效果</p>
+<h5 id="facet-grid-基于两个变量进行分解"><a href="#facet-grid-基于两个变量进行分解" class="headerlink" title="facet_grid() 基于两个变量进行分解"></a>facet_grid() 基于两个变量进行分解</h5><p>有的时候可能需要基于两个变量对整个数据集进行分解,而这时候就需要使用facet_grid()</p>
+<p>这个方法的第一个参数仍然是一个公式,这个公式应该同时包含两个变量,为了区分开两个变量,这边并不是使用<code>,</code>(英文逗号)隔开,而是采用了<code>~</code>隔开</p>
+<p>示例如下:<code>ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy)) + facet_grid(drv ~ cyl)</code></p>
+<p>具体示例的样子把代码运行一下就好了</p>
+<p>在R的facet_grid方法中如果出现<code>.</code>,其中也代表着某种含义<br>示例:<code>ggplot(data = mpg) +
+geom_point(mapping = aes(x = displ, y = hwy)) +
+facet_grid(drv ~ .)</code><br>以及<code>ggplot(data = mpg) +
+geom_point(mapping = aes(x = displ, y = hwy)) +
+facet_grid(. ~ cyl)</code>是值得注意的地方</p>
+<h4 id="Geometric-Objects"><a href="#Geometric-Objects" class="headerlink" title="Geometric Objects"></a>Geometric Objects</h4><p>观察一下,下图的两个图有什么相同点<br><img src="https://s2.ax1x.com/2020/01/30/11SnhD.png" alt="11SnhD.png"><br>可以看到,两个图像有着一样的x轴和y轴,同时也描述同样的数据,但是却不相同</p>
+<p>这是由于我们使用了不同的geom方法进行描述造成的</p>
+<p>左图我们是使用代码<code>ggplot(data = mpg) +geom_smooth(mapping = aes(x = displ, y = hwy))</code>进行绘制的</p>
+<p>右图的代码<code>ggplot(data = mpg) + geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv))</code></p>
+<p>对比三幅图(包括前面的散点图)区别在于附加在ggplot方法的geom function和参数是不同的</p>
+<p>每个geom function在ggplot2中都有着相同的参数mapping,但是不是所有的美化都可以用于每个方法(就是前面说的size,color这样的对于不同的方法可能不具有普适性,比如我们可以给point散点图设定图案,但是我们不能给line线图 或者说是折线图 设定图案)</p>
+<p>在geom_smooth()中我们可以绘制不同的线用来表示不同的群体,如上图的右图一样,我们需要指定geom_smooth()的linetype参数</p>
+<p>示例如下:<code>ggplot(data = mpg) + geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv))</code></p>
+<p>在这个代码的运行结果下,我们就把车以基于drv变量的三条线条区分开了(drv变量用来描述车的动力总和drivetrain0)</p>
+<p>如果需要把基于统一数据的多个图整合在一个图里面,我们可以在一个ggplot方法后加多个geom function</p>
+<p>ggplot2提供了超过30种几何函数,其拓展包甚至能提供更多几何函数<br>在<a href="https://www.ggplot2-exts.org" target="_blank" rel="noopener">https://www.ggplot2-exts.org
+</a>查看更多例子</p>
+<p>如果想深入理解ggplot2的一些细节(cheatsheet)可以访问<a href="http://rstudio.com/cheatsheets" target="_blank" rel="noopener">cheatsheet</a><br>当然也可以用?或者help来获得帮助</p>
+<p>很多几何函数,比如geom_smooth()用单一的几何对象来描述多行数据</p>
+<p>对于多行数据,我们可以使用一些特殊方法来说明多个变量</p>
+<p>To display multiple geoms in the same plot, add multiple geom functions to ggplot()<br>如果想在一个图中展示多个图像,多次使用geom function就可以了</p>
+<p>这时候就出现了一个问题,当多次叠加geom function的时候,每个方法都有一个mapping对象,如果要修改就需要全部修改,,忘记修改任何一个都会造成结果有问题,ggplot2提供了全局映射mapping,当使用者在ggplot函数中指定了mapping参数(示例:<code>ggplot(data = mpg, mapping =  aes(x = displ, y = hwy)) + geom_point() + geom_smooth()</code>)这个映射关系就变成了全局映射,在之后的geom_function也均可使用</p>
+<p>当有的时候可能需要改变一下geom function里面的映射的时候,ggplot2也提供了对应的本地映射(local mapping)来改变,只要在geom function里面指定mapping参数就可以了(示例:<code>ggplot(data = mpg,mapping = aes(x = displ, y = hwy)) +geom_point(mapping = aes(color = class)) +geom_smooth()</code>)</p>
+<p>也可以把改变每个geom function使用的数据集在geom function中使用data参数 其值lter()的返回结果</p>
+]]></content>
+      <tags>
+        <tag>R语言读书记录</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>cnki-spider-知网爬虫</title>
     <url>/2020/01/27/cnki-spider-zhi-wang-pa-chong/</url>
     <content><![CDATA[<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>在当前信息量爆炸的世界中,如何高效的采集到有效的信息非常关键</p>
